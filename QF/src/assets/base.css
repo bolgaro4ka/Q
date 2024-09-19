@@ -1,0 +1,58 @@
+
+:root {
+    --color-background: #181818;
+    --color-background-soft: #222222;
+    --color-background-mute: #282828;
+
+    --color-heading: #fff;
+    --color-text: rgba(255, 255, 255, 0.5);
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background: var(--color-background);
+  line-height: 1.6;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 15px;
+}
+p.cache_p {
+  color: var(--color-text) !important;
+}
+
+a {
+  color: #99c3ff;
+  text-decoration: none;
+}
+
+a:visited {
+  color:#c58af9;
+}
+
+.link_p a {
+  font-size: 18px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.arch, .arch:visited{
+  color: brown;
+}

@@ -9,7 +9,7 @@ const ein : Ref<string> = ref('')
 
 function handleClick(e : Event, mode?: string) {
     if (mode) ein.value = mode
-    location.href = `/get?st=${query.value}&in=${ein.value}`
+    location.href = `/get?st=${query.value}&in=${ein.value}&ot=0`
     // router.push(`/get?st=${query.value}&in=w`)
 }
 

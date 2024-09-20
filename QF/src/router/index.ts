@@ -15,7 +15,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      props: (route) => ({ st: route.query.st, in: route.query.in }),
+      props: (route) => ({ st: route.query.st, in: route.query.in, ot: route.query.ot  }),
       component: () => import('../views/QF.vue')
     }
   ]

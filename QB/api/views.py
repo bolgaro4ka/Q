@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from bs4 import BeautifulSoup
 import requests
 import urllib.parse
+from . import common
 # Create your views here.
 
 def delete_special_symbols_in_url(st):
@@ -14,27 +15,44 @@ class StatusView(generics.GenericAPIView):
         
         req = request.data
         res = []
+        in_ = req['in']
+        ot = req['ot']
 
         st =delete_special_symbols_in_url(req['st'])
-        est = urllib.parse.quote(st)
-        nest = ''
-        for item in est.split('%20'):
-            print(item)
-            nest = nest + '%20' if nest else '' + urllib.parse.quote(item)
-        print(nest, est)
-        in_ = req['in']
+        est=''
+        if in_ == 'w':
+            est = urllib.parse.quote(st)
+            nest = ''
+            for item in est.split('%20'):
+                print(item)
+                nest = nest + '%20' if nest else '' + urllib.parse.quote(item)
+            print(nest, est)
+        elif in_ == 'f':
+            for item in st:
+                try:  
+                    leter = common.CODE[item]
+                except KeyError:
+                    leter=item
+                est = est + leter
+                
+            print(est)
 
-        params = {"st": st, "in": in_}
-        url_with_params = f"{'https://www.mmnt.ru/get'}?st={est}&in={in_}"
+        
+
+        url_with_params = f"{'https://www.mmnt.ru/get'}?st={est}&in={in_}&ot={ot}"
 
         print(url_with_params)
 
         soup_mamont = BeautifulSoup(requests.get(url_with_params).text, 'html.parser')
+        try:
+            cpages = str(soup_mamont.find('div', class_='info_block').find_all('b')[0].text)
+        except AttributeError:
+            cpages = str(soup_mamont.find('div', class_='nav_block').find_all('b')[0].text)
         for font_tag in soup_mamont.find_all('font'):
             font_tag['color'] = '#fff'
 
         for tr_tag in soup_mamont.find_all('tr'):
-            tr_tag['bgcolor'] = '#fff'
+            tr_tag['bgcolor'] = '#232222'
 
         for p_cache in soup_mamont.find_all('p', class_='cache_p'):
             p_cache.a['href'] = 'https://www.mmnt.ru' + p_cache.a['href']
@@ -88,4 +106,5 @@ class StatusView(generics.GenericAPIView):
                 res.append(obj)
             
         req['obj'] = res[2:]
+        req['cpages'] = cpages
         return Response(req)

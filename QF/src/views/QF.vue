@@ -26,7 +26,7 @@ const results = raw_res.data.obj
   <div class="finds__wrapper">
     <div class="finds__content">
     <div class="finds">
-    <div v-for="result in results" :key="result" class="find" :class="result.class">
+    <div v-for="result in results" :key="result" :class="`find ${props.in}_cls ${result.class}`">
       <div v-html="result.link" class="find_link"></div>
       <p v-html="result.url" class="find_url"></p>
       <div class="table" v-html="result.table"></div>
@@ -106,6 +106,10 @@ b {
 
 .table table * {
   font-size: 7px;
+}
+
+.f_cls {
+  max-width: 622px;
 }
 
 

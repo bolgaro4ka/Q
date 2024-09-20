@@ -31,7 +31,10 @@ class StatusView(generics.GenericAPIView):
 
         soup_mamont = BeautifulSoup(requests.get(url_with_params).text, 'html.parser')
         for font_tag in soup_mamont.find_all('font'):
-            font_tag = 'p'
+            font_tag['color'] = '#fff'
+
+        for tr_tag in soup_mamont.find_all('tr'):
+            tr_tag['bgcolor'] = '#fff'
 
         for p_cache in soup_mamont.find_all('p', class_='cache_p'):
             p_cache.a['href'] = 'https://www.mmnt.ru' + p_cache.a['href']

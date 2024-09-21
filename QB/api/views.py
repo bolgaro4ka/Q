@@ -6,10 +6,6 @@ import urllib.parse
 from . import common
 # Create your views here.
 
-def delete_special_symbols_in_url(st):
-    url = st.replace('%20', ' ').replace('%3A', ':').replace(r'%2F', '/').replace(r'%3F', '?')
-    return url
-
 class StatusView(generics.GenericAPIView):
     def post(self, request, format=None):
         
@@ -27,7 +23,7 @@ class StatusView(generics.GenericAPIView):
         try: sz = req['sz']
         except KeyError: sz = ''
 
-        try: st =delete_special_symbols_in_url(req['st'])
+        try: st =req['st']
         except KeyError: st = ''
         est=''
         if in_ == 'w':
@@ -112,7 +108,7 @@ class StatusView(generics.GenericAPIView):
                     }
 
                     if sg == '':
-                        obj['search_url']=  str(item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[6].a['href']) if item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[6].a else 'None',
+                        obj['search_url']= common.decode_url(str(item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[6].a['href'])) if item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[6].a else 'None',
 
                     if obj['link'] == 'None':
                         continue

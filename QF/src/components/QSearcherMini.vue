@@ -2,6 +2,7 @@
 import { ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { replaceSpecialSymbols } from '@/common/main';
 const router = useRouter();
 
 const query = ref('')
@@ -9,7 +10,7 @@ const ein : Ref<string> = ref('')
 
 function handleClick(e : Event, mode?: string) {
     if (mode) ein.value = mode
-    location.href = `/get?st=${query.value}&in=${ein.value}&ot=0`
+    location.href = `/get?st=${replaceSpecialSymbols(query.value)}&in=${ein.value}&ot=0`
     // router.push(`/get?st=${query.value}&in=w`)
 }
 
@@ -24,7 +25,7 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
 <template>
     <div class="searcher__head">
         <div class="searcher__content">
-            <div class="circle"></div>
+            <RouterLink to="/"><div class="circle"></div></RouterLink>
             <div class="searcher">
                 <input type="text" v-model="query">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" @click="handleClick"/></svg>

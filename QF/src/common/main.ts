@@ -9,6 +9,10 @@ export const CODE : { [key: string]: string } = {
     'я': '%FF'
 }
 
+export const SPECIAL_SYMBOLS = {
+    '+': '%2B', '-': '%2D', '*': '%2A', '/': '%2F', '=': '%3D'
+}
+
 export const NORMALIZE_NUMBERS : { [key: string]: number } = {
     'тыс.': 1000,
     'млн.': 1000000,
@@ -22,6 +26,24 @@ export function urlEncode(s: string) {
     let res=''
     for (let leter of s) {
         if (leter in CODE) res += CODE[leter]
+        else res += leter
+    }
+    return res
+}
+
+export function replaceSpecialSymbols(s: string) {
+    let res=''
+    for (let leter of s) {
+        if (leter in SPECIAL_SYMBOLS) res += SPECIAL_SYMBOLS[leter]
+        else res += leter
+    }
+    return res
+}
+
+export function urlDecode(s: string) {
+    let res=''
+    for (let leter of s) {
+        if (leter in CODE) res += Object.keys(CODE).find(key => CODE[key] === leter)
         else res += leter
     }
     return res

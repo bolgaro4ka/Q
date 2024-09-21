@@ -8,3 +8,8 @@ CODE = {
     'ц': r'%F6', 'ч': r'%F7', 'ш': r'%F8', 'щ': r'%F9', 'ъ': r'%FA', 'ы': r'%FB', 'ь': r'%FC', 'э': r'%FD', 'ю': r'%FE',
     'я': r'%FF'
 }
+
+def decode_url(url):
+    for key, value in CODE.items():
+        url = url.replace(value, key)
+    return url

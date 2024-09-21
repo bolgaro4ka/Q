@@ -8,6 +8,7 @@ import { onBeforeRouteUpdate } from 'vue-router';
 import iconv from 'iconv-lite';
 import { Buffer } from 'buffer';
 import QPages from '@/components/QPages.vue';
+import { replaceSpecialSymbols} from '@/common/main';
 
 const route = useRoute()
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
@@ -16,8 +17,11 @@ console.log(REQ_ENDPOINT)
 
 console.log(props.in, props.st)
 
+console.log(replaceSpecialSymbols(props.st))
+
+
 const raw_res = await axios.post(REQ_ENDPOINT, {
-  st: props.st,
+  st: replaceSpecialSymbols(props.st),
   in: props.in,
   ot: props.ot,
   sz: props?.sz,
@@ -26,6 +30,8 @@ const raw_res = await axios.post(REQ_ENDPOINT, {
 
 
 const results = raw_res.data.obj
+
+
 
 </script>
 
@@ -50,6 +56,7 @@ const results = raw_res.data.obj
     </div>
   </div>
   </div>
+  <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages" />
 </template>
 
 <style scoped lang="scss">

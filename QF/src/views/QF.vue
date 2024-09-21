@@ -10,7 +10,7 @@ import { Buffer } from 'buffer';
 import QPages from '@/components/QPages.vue';
 
 const route = useRoute()
-const props = defineProps(['st', 'in', 'ot'])
+const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 
 console.log(REQ_ENDPOINT)
 
@@ -19,7 +19,9 @@ console.log(props.in, props.st)
 const raw_res = await axios.post(REQ_ENDPOINT, {
   st: props.st,
   in: props.in,
-  ot: props.ot
+  ot: props.ot,
+  sz: props?.sz,
+  sg: props?.sg
 })
 
 
@@ -41,6 +43,7 @@ const results = raw_res.data.obj
       <p v-html="result.desc"  class="find_desc"></p>
       <p v-html="result.arch" class="find_arch"></p>
       <p class="rkn__block" v-if="result.class == 'rkn'">Возможно сайт заблокирован великим и не подражаемым РКН</p>
+      <div><a :href="result.simular_url+'&ot=0'">[похожие файлы]</a><a :href="result.also_url+'&ot=0'">[найти файлы такого же размера]</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">[искать только на этом сервере]</a></div>
       <div class="find__saveWrapper" v-if="props.in == 'w'"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg><p v-html="result.saved" class="find_saved"></p></div>
       
     </div>
@@ -56,9 +59,17 @@ const results = raw_res.data.obj
   max-width: 2000px;
 }
 
-.find_link a {
-  color: var(--color-text);
+.f_cls .find_link * {
+  color: #99c3ff;
   text-decoration: none;
+}
+
+.f_cls .find_link *:hover {
+  text-decoration: underline;
+}
+
+.f_cls .find_link *:visited {
+  color: #c58af9;
 }
 
 .finds {

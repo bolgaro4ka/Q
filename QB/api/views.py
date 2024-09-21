@@ -16,9 +16,19 @@ class StatusView(generics.GenericAPIView):
         req = request.data
         res = []
         in_ = req['in']
-        ot = req['ot']
+        try:
+            ot = req['ot']
+        except KeyError:
+            ot = 1
 
-        st =delete_special_symbols_in_url(req['st'])
+        try: sg = req['sg']
+        except KeyError: sg = ''
+
+        try: sz = req['sz']
+        except KeyError: sz = ''
+
+        try: st =delete_special_symbols_in_url(req['st'])
+        except KeyError: st = ''
         est=''
         if in_ == 'w':
             est = urllib.parse.quote(st)
@@ -39,7 +49,7 @@ class StatusView(generics.GenericAPIView):
 
         
 
-        url_with_params = f"{'https://www.mmnt.ru/get'}?st={est}&in={in_}&ot={ot}"
+        url_with_params = f"{'https://www.mmnt.ru/get'}?st={est}&in={in_}&ot={ot}" + (f"&sg={sg}" if sg else '') + (f"&sz={sz}" if sz else '')
 
         print(url_with_params)
 
@@ -95,16 +105,23 @@ class StatusView(generics.GenericAPIView):
                 try:
                     obj = {
                         'link': str(item.find_all('tr')[0].find_all('td')[1].a),
-                        'table': str(item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].table)
+                        'table': str(item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].table),
+                        'simular_url': str(item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[4].a['href']) if item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[4].a else 'None',
+                        'also_url': str(item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[5].a['href']) if item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[5].a else 'None',
+                        
                     }
+
+                    if sg == '':
+                        obj['search_url']=  str(item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[6].a['href']) if item.find_all('tr')[1].find_all('td')[0].find_all('tt')[0].find_all('font')[6].a else 'None',
 
                     if obj['link'] == 'None':
                         continue
                 except IndexError as e:
-                    print(item.find_all('tr'), '\n =================================')
+                    print(e, item)
                     continue
                 res.append(obj)
             
-        req['obj'] = res[2:]
+
+        req['obj'] = res[0:]
         req['cpages'] = cpages
         return Response(req)

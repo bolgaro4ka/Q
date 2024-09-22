@@ -28,9 +28,14 @@ const raw_res = await axios.post(REQ_ENDPOINT, {
   sg: props?.sg
 })
 
+const res_google = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(props.st)}&start=${parseInt(props.ot)/10}&lr=ru-RU`)
+
 
 const results = raw_res.data.obj
 
+function getHostname(url : string) {
+  return new URL(url).hostname
+}
 
 
 </script>
@@ -41,7 +46,18 @@ const results = raw_res.data.obj
   <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages" />
   <div class="finds__wrapper">
     <div class="finds__content">
+
     <div class="finds">
+
+      <div class="find google" v-if="res_google.data.items[0] && props.in == 'w'" v-for="result in res_google.data.items" :key="result">
+        <a :href="result.link" target="_blank"><p v-html="result.htmlTitle" class="find_url"></p></a>
+        <div v-html="getHostname(result.link)" class="find_link"></div>
+        
+        <p v-html="result.htmlSnippet"  class="find_desc"></p>
+
+      </div>
+
+
     <div v-for="result in results" :key="result" :class="`find ${props.in}_cls ${result.class}`">
       <div v-html="result.link" class="find_link"></div>
       <p v-html="result.url" class="find_url"></p>
@@ -49,7 +65,7 @@ const results = raw_res.data.obj
       <p v-html="result.desc"  class="find_desc"></p>
       <p v-html="result.arch" class="find_arch"></p>
       <p class="rkn__block" v-if="result.class == 'rkn'">Возможно сайт заблокирован великим и не подражаемым РКН</p>
-      <div><a :href="result.simular_url+'&ot=0'">[похожие файлы]</a><a :href="result.also_url+'&ot=0'">[найти файлы такого же размера]</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">[искать только на этом сервере]</a></div>
+      <div v-if="props.in == 'f'"><a :href="result.simular_url+'&ot=0'">[похожие файлы]</a><a :href="result.also_url+'&ot=0'">[найти файлы такого же размера]</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">[искать только на этом сервере]</a></div>
       <div class="find__saveWrapper" v-if="props.in == 'w'"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg><p v-html="result.saved" class="find_saved"></p></div>
       
     </div>
@@ -151,6 +167,21 @@ b {
 
 .table * {
   color: white;
+}
+
+.google {
+  border-radius: 130px;
+  border-image: var(--google-gradient) 30;
+  border-style: solid;
+  border-width: 2px;
+  width: 500px;
+  .find_desc {
+    color: var(--color-text);
+  }
+
+  .find_link {
+    color: white;;
+  }
 }
 
 

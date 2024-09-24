@@ -28,8 +28,6 @@ ALLOWED_HOSTS = ['qb.paia1nik.ru', 'https://qb.paia1nik.ru']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 

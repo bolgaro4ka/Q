@@ -56,6 +56,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'QB.urls'
 
+CORS_ORIGIN_WHITELIST = [
+    'https://qb.paia1nik.ru',
+    'http://qb.paia1nik.ru'
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

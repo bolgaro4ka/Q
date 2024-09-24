@@ -5,9 +5,13 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <main>
     <Suspense>
-    <RouterView />
+    <RouterView v-slot="{ Component }">
+      <Transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
     <template #fallback>
-      <div>Loading...</div>
+      <div style="color: #8c8879;">Loading...</div>
     </template>
   </Suspense>
   </main>

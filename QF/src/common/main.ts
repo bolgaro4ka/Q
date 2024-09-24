@@ -9,7 +9,7 @@ export const CODE : { [key: string]: string } = {
     'я': '%FF'
 }
 
-export const SPECIAL_SYMBOLS = {
+export const SPECIAL_SYMBOLS : { [key: string]: string } = {
     '+': '%2B', '-': '%2D', '*': '%2A', '/': '%2F', '=': '%3D'
 }
 

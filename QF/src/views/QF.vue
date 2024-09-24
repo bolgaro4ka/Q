@@ -6,7 +6,6 @@ import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { onBeforeRouteUpdate } from 'vue-router';
 import iconv from 'iconv-lite';
-import { Buffer } from 'buffer';
 import QPages from '@/components/QPages.vue';
 import { replaceSpecialSymbols} from '@/common/main';
 import NoFound from '@/components/NoFound.vue';
@@ -57,7 +56,7 @@ function getHostname(url : string) {
 
       <div class="finds">
 
-        <div class="find google" v-if="res_google?.data?.items && props.in == 'w'" v-for="result in res_google.data.items" :key="result" >
+        <div class="find google" v-if="(res_google as any)?.data?.items && props.in == 'w'" v-for="result in (res_google as any).data.items" :key="result" >
           <a :href="result.link" target="_blank"><p v-html="result.htmlTitle" class="find_url"></p></a>
           <div v-html="getHostname(result.link)" class="find_link"></div>
           

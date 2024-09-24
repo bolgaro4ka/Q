@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d9oqck+)w=kt19=#+rba9hz^wb)u7^a%rcm72kts$)lqr!7ycq'
 
 ALLOWED_HOSTS = ['qb.paia1nik.ru', 'https://qb.paia1nik.ru', '*']
-# CSRF_TRUSTED_ORIGINS=["https://paia1nik.duckdns.org", "https://webbox.paia1nik.ru", "http://127.0.0.1:3000"]
+CSRF_TRUSTED_ORIGINS=["https://paia1nik.duckdns.org", 'https://qb.paia1nik.ru', "http://127.0.0.1:3000"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -81,7 +81,8 @@ WSGI_APPLICATION = 'QB.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
     'https://paia1nik.duckdns.org',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://qb.paia1nik.ru',
 ]
 
 

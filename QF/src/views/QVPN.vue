@@ -55,6 +55,13 @@ function changePath() {
     border-radius: 10px !important;
     align-items: center !important;
 
+    p {
+        background-color: purple !important;
+        padding: 5px !important;
+        border-radius: 5px !important;
+        color: white !important;
+    }
+
 }
 
 .qvpn-input {

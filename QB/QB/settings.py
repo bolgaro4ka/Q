@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ['q.paia1nik.ru', 'https://q.paia1nik.ru', '*']
 CSRF_TRUSTED_ORIGINS=['https://q.paia1nik.ru']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 # Application definition

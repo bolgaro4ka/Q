@@ -36,8 +36,8 @@ function changePath() {
             <p>QVPN</p>
             <input type="text" class="qvpn-input" v-model="url" @keypress.enter="changePath()">
         </div>
-        <div v-html="page" style="background-color: white; height: 100vh;"></div>
-        <NoFound v-if="error" />
+        <div v-html="page" style="background-color: white; height: 100vh;" v-if="!error"></div>
+        <NoFound v-if="error" err="страница не найдена! Проверьте привально ли вы указали URL" />
     </div>
 </template>
 

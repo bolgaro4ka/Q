@@ -1,6 +1,8 @@
 # Q (Quadrillion)
 Q - поисковик по всему интернету
-![favicon](https://github.com/user-attachments/assets/6e17156d-fd27-4e3b-a4d3-214d530dea91)
+<div align="center"> 
+ <img src="https://github.com/user-attachments/assets/6e17156d-fd27-4e3b-a4d3-214d530dea91" alt="logo" />
+</div>
 
 ## Содержание
  - [❓ Что это](#что-это)

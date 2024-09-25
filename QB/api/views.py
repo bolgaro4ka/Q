@@ -16,10 +16,12 @@ class QVPNView(generics.GenericAPIView):
 
         except KeyError:
             res = 'Backend Error: no url in post data'
-            return Response({'res': res})
-
-        soup = BeautifulSoup(requests.get(url).text, 'html.parser')
-
+            return Response({'res': res, 'url': url, 'html': ''}, status=500)
+        try:
+            soup = BeautifulSoup(requests.get(url).text, 'html.parser')
+        except Exception as e:
+            res = 'Backend Error: '+str(e)
+            return Response({'res': res, 'url': url, 'html': ''}, status=500)
         for img_tags in soup.find_all('img'):
             if 'src' in img_tags.attrs:
                 if not (img_tags.attrs['src'].startswith('http')):
@@ -37,7 +39,7 @@ class QVPNView(generics.GenericAPIView):
                 else:
                     a_tags.attrs['href'] = f'http://localhost:3003/qvpn/?url={url}'+a_tags.attrs['href']
 
-        return Response({'html': soup.prettify(encoding='utf-8'), 'url': url, 'res': 'OK'})
+        return Response({'html': soup.prettify(encoding='utf-8'), 'url': url, 'res': 'OK'}, status=200)
 
 class StatusView(generics.GenericAPIView):
     def post(self, request, format=None):

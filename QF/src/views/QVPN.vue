@@ -3,17 +3,23 @@ import { BASE_URL, VPN_ENDPOINT } from '@/config/main';
 import axios from 'axios';
 import { ref } from 'vue';
 import { decodeUTF8 } from '@/common/main';
+import NoFound from '@/components/NoFound.vue';
 
 
 const props = defineProps(['url'])
 
 const raw_page = await axios.post(VPN_ENDPOINT, {
     url: props.url
+}).catch((e) => {
+    console.log(e);
+    error.value = true;
 })
 
 const page = raw_page.data.html
 
 const url = ref(props.url)
+
+const error= ref(false)
 
 
 console.log(props.url)
@@ -24,13 +30,21 @@ function changePath() {
 </script>
 
 <template>
-    <div>
+    <div v-if="!error">
         <div class="qvpn">
             <RouterLink to="/" style="display: flex;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="purple"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg></RouterLink>
             <p>QVPN</p>
             <input type="text" class="qvpn-input" v-model="url" @keypress.enter="changePath()">
         </div>
         <div v-html="page" style="background-color: white; height: 100vh;"></div>
+    </div>
+    <div v-if="error">
+        <div class="qvpn">
+            <RouterLink to="/" style="display: flex;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="purple"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg></RouterLink>
+            <p>QVPN</p>
+            <input type="text" class="qvpn-input" v-model="url" @keypress.enter="changePath()">
+            <NoFound/>
+        </div>
     </div>
 </template>
 

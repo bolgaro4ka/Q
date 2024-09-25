@@ -1,11 +1,12 @@
 {
-    "name": "Quadrolion",
+    "name": "Quadrillion",
     "short_name": "Q",
     "description": "Search engine 'Q'",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#181818",
     "theme_color": "#232222",
+
     "icons": [
       {
         "src": "/src/assets/favicon.ico",

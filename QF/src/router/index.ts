@@ -17,6 +17,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       props: (route) => ({ st: route.query.st, in: route.query.in, ot: route.query.ot, sz: route.query?.sz, sg: route.query?.sg }),
       component: () => import('../views/QF.vue')
+    },
+    {
+      path: '/qvpn',
+      name: 'qvpn',
+      component: () => import('../views/QVPN.vue'),
+      props: (route) => ({ url: route.query.url }),
     }
   ]
 })

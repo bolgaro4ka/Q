@@ -1,3 +1,5 @@
+import urllib
+
 CODE = {
     'А': '%C0', 'Б': '%C1', 'В': '%C2', 'Г': '%C3', 'Д': '%C4', 'Е': '%C5', 'Ж': '%C6', 'З': '%C7', 'И': '%C8',
     'Й': '%C9', 'К': '%CA', 'Л': '%CB', 'М': '%CC', 'Н': '%CD', 'О': '%CE', 'П': '%CF', 'Р': '%D0', 'С': '%D1',
@@ -13,3 +15,6 @@ def decode_url(url):
     for key, value in CODE.items():
         url = url.replace(value, key)
     return url
+
+def get_domain(url):
+    return  url.split('://')[0]+'://'+urllib.parse.urlparse(url).netloc

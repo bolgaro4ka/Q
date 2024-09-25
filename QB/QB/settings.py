@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'QB.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
     'https://paia1nik.duckdns.org',
-    'http://localhost:3000',
+    'http://localhost:3003',
     'https://q.paia1nik.ru',
 ]
 

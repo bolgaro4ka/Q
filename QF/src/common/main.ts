@@ -69,4 +69,10 @@ export function toNormalNumber (s: string) {
 }
 
 export function roundIfNumberHaveDotWithNumberAfterItMoreThanZero(s: number) {if (parseInt(s.toString().split('.')[1]) > 0) {return parseInt(s.toString().split('.')[0])+1} else return s}
+export function escape(s: string) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
 
+export function decodeUTF8(s: string) {
+    return decodeURIComponent(escape(s))
+}

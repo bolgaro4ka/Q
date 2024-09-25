@@ -3,6 +3,8 @@ import { onMounted, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { replaceSpecialSymbols } from '@/common/main';
+import Modal from './Modal.vue';
+import PopupSettings from './PopupSettings.vue';
 const router = useRouter();
 
 const query = ref('')
@@ -12,14 +14,23 @@ onMounted(() => {
     mode.value = 'w'
 })
 
+const isSettingsPopupOpen = ref(false)
+
 
 function handleClick(e : Event) {
-    location.href = `/get?st=${replaceSpecialSymbols(query.value)}&in=${mode.value}&ot=0`
+    if (mode.value != 'q') location.href = `/get?st=${replaceSpecialSymbols(query.value)}&in=${mode.value}&ot=0`
+    if (mode.value == 'q') location.href = `/qvpn?url=${query.value}`
     // router.push(`/get?st=${query.value}&in=w`)
 }
 
 window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter') handleClick(e);} )
 
+onMounted(() => {
+    const background = localStorage.getItem('url')
+    if (background) {
+        document.body.style.backgroundImage = `url(${background})`
+    }
+})
 
 </script>
 
@@ -36,12 +47,61 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
         <div class="searcher__links">
             <a :class="(mode == 'f') && 'searcher_active' " @click="mode = 'f'; console.log(mode)">Поиск среди файлов</a>
             <a :class="(mode == 'w') && 'searcher_active' " @click="mode = 'w'; console.log(mode)">Поиск по интернету</a>
+            <a :class="(mode == 'q') && 'searcher_active' " @click="mode = 'q'; console.log(mode)">QVPN (только URL)</a>
+        </div>
+        <div class="searcher__edit" @click="isSettingsPopupOpen = true">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
         </div>
     </div>
+
+    <div class="q__bottom">
+        <div class="author">
+            <p>Сделано <a href="https://github.com/bolgaro4ka">bolgaro4ka</a> <a href="https://t.me/papyas_07">(telegram)</a> на сервере и сети доменов <a href="https://github.com/Paia1nik">Paia1nik`а</a> <a href="https://t.me/Paia1nik">(telegram)</a> /// <a href="https://github.com/bolgaro4ka/Q">Этот проект на GitHub</a> /// <a href="https://github.com/bolgaro4ka/Q/blob/main/LICENSE">Лицензия</a></p>
+        </div>
+    </div>
+
+    <Teleport to="body">
+        <Modal v-if="isSettingsPopupOpen" @close="isSettingsPopupOpen = false"  title="Настройки Q">
+            <PopupSettings />
+        </Modal>
+    </Teleport>
+
+
+    
 </template>
 
 
 <style lang="scss" scoped>
+.searcher__edit {
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    height: 40px;
+    width: 40px;
+    border-radius: 10000px;
+    background-color: #232222;
+    text-align: center;
+    display: flex;
+    z-index: 30;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-text);
+}
+    .q__bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: fit-content;
+        text-align: center;
+        display: flex;
+        z-index: 30;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        color: var(--color-text);
+    }
+
     .logo {
         background-size: 10px;
         background-image: url('@assets/logo.png');
@@ -61,13 +121,16 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
     .searcher {
         top: calc( ( 1vh + 1vw ) * 15 );
             left: 25vw;
-            width: 75vw;
+            width: 70vw;
             z-index: 2;
             position: absolute;
     }
 
     .searcher__head {
         display: flex;
+        width: 100%;
+        
+        padding-right: 10px;
         justify-content: space-between;
         align-items: center;
 
@@ -109,6 +172,20 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
         
     }
 
+    @media screen and (max-width: 820px) {
+        .searcher__edit {
+            bottom: 60px;
+            
+        }
+    }
+
+    @media screen and (max-width: 420px) {
+        .searcher__edit {
+            bottom: 80px;
+            
+        }
+    }
+
     .searcher__content {
         padding-top: 30px;
         padding-bottom: 60px;
@@ -120,7 +197,7 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
         display: flex;
         flex-direction: column;
         gap: 10px;
-        padding-right: 20px;
+        padding-top: 10px;
         a {
             color: var(--color-text);
         }

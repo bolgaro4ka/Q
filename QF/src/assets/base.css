@@ -32,6 +32,10 @@ body {
     'Helvetica Neue',
     sans-serif;
   font-size: 15px;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+  background-size: cover;
 }
 p.cache_p {
   color: var(--color-text) !important;

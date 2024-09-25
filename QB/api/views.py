@@ -4,7 +4,40 @@ from bs4 import BeautifulSoup
 import requests
 import urllib.parse
 from . import common
+
 # Create your views here.
+
+class QVPNView(generics.GenericAPIView):
+    def post(self, request, format=None):
+        req = request.data
+        try:
+            url = req['url']
+
+
+        except KeyError:
+            res = 'Backend Error: no url in post data'
+            return Response({'res': res})
+
+        soup = BeautifulSoup(requests.get(url).text, 'html.parser')
+
+        for img_tags in soup.find_all('img'):
+            if 'src' in img_tags.attrs:
+                if not (img_tags.attrs['src'].startswith('http')):
+                    img_tags.attrs['src'] = f'{common.get_domain(url)}'+img_tags.attrs['src']
+
+            if '..' in img_tags.attrs['src']:
+                img_tags.attrs['src'] = img_tags.attrs['src'].replace('..', '')
+
+
+        for a_tags in soup.find_all('a'):
+
+            if 'href' in a_tags.attrs:
+                if a_tags.attrs['href'].startswith('http'):
+                    a_tags.attrs['href'] = f'http://localhost:3003/qvpn/?url='+a_tags.attrs['href']
+                else:
+                    a_tags.attrs['href'] = f'http://localhost:3003/qvpn/?url={url}'+a_tags.attrs['href']
+
+        return Response({'html': soup.prettify(encoding='utf-8'), 'url': url, 'res': 'OK'})
 
 class StatusView(generics.GenericAPIView):
     def post(self, request, format=None):

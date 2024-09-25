@@ -15,7 +15,7 @@ const raw_page = await axios.post(VPN_ENDPOINT, {
     error.value = true;
 })
 
-const page = raw_page.data.html
+const page = raw_page?.data?.html
 
 const url = ref(props.url)
 

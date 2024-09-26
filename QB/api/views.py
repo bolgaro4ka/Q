@@ -6,6 +6,22 @@ import urllib.parse
 from . import common
 
 # Create your views here.
+class GetFTPSView(generics.GenericAPIView):
+    def get(self, request, format=None):
+        manont_soup = BeautifulSoup(requests.get('https://www.mmnt.ru/ftp-sites').text, 'html.parser')
+        res=[]
+        
+        for td_el in manont_soup.find_all('td'):
+            try:
+                temp = []
+                temp.append(str(td_el.find('font')))
+                temp.append(str(td_el.find('a')))
+                res.append([temp])
+            except AttributeError as e:
+                continue
+
+        return Response(res)
+
 
 class QVPNView(generics.GenericAPIView):
     def post(self, request, format=None):

@@ -15,7 +15,8 @@
 
 <style lang="scss" scoped>
 .no-found-wrapper {
-    width: 100vw;
+    width: 90vw;
+    margin: 0 auto;
     height: calc(100vh - 170px);
     display: flex;
     align-items: center;

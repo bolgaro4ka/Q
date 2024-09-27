@@ -4,6 +4,33 @@ from bs4 import BeautifulSoup
 import requests
 import urllib.parse
 from . import common
+import g4f
+from django.conf import settings
+
+
+class GetGPTView(generics.GenericAPIView):
+    def post(self, request, format=None):
+        req = request.data
+        try:
+            content = req['content']
+        except KeyError:
+            res = 'Backend Error: no content in post data'
+            return Response({'res': res}, status=500)
+        
+
+        response = g4f.ChatCompletion.create(model="gpt-4", messages=[{"role": "user", "content": content}])
+
+        if not response:
+            response = g4f.ChatCompletion.create(model="gpt-4", messages=[{"role": "user", "content": content}])
+        if not response:
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": content}])
+        if not response:
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": content}])
+        
+        response=response
+
+        return Response({'res': response})
+        
 
 # Create your views here.
 class GetFTPSView(generics.GenericAPIView):
@@ -15,7 +42,9 @@ class GetFTPSView(generics.GenericAPIView):
             try:
                 temp = []
                 temp.append(str(td_el.find('font')))
-                temp.append(str(td_el.find('a')))
+                a = td_el.find('a')
+                a['href'] = 'ftp://' + a.get_text()
+                temp.append(str(a))
                 res.append([temp])
             except AttributeError as e:
                 continue

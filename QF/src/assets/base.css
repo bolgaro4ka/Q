@@ -7,12 +7,14 @@
     --color-heading: #fff;
     --color-text: rgba(255, 255, 255, 0.5);
     --google-gradient: linear-gradient(90deg, #eb493b 0%, #fbbc05 30%, #34a853 60%, #4285f4 100%);
+    --qgpt-gradient: linear-gradient(90deg, #fc4c51 0%, #fd8001 30%, #b8d2e9 60%, #fc4c51 100%);
 }
 
 
 * {
   box-sizing: border-box;
   margin: 0;
+  scrollbar-color: purple #2a3038 ;
 }
 
 body {

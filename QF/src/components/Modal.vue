@@ -96,6 +96,7 @@
 
       h3 {
         color: var(--color-text);
+        user-select: none;
       }
         position: fixed;
         z-index: 10;

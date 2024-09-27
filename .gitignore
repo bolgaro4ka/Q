@@ -33,6 +33,7 @@ MANIFEST
 *.spec
 
 *.api
+!.env.example
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt

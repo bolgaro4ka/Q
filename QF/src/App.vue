@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <Suspense>
     <RouterView></RouterView>
     <template #fallback>
-      <div>Loading...</div>
+      <Loader/>
     </template>
   </Suspense>
   </main>

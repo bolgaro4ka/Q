@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const raw_res = await axios.get(FTP_ENDPOINT)
 
-const res = raw_res.data.slice(8,-1)
+const res = raw_res.data.slice(7,-1)
 
 console.log(res)
 
@@ -26,5 +26,7 @@ console.log(res)
     overflow-y: scroll;
     overflow-x: hidden;
     height: 600px;
+    width: 400px;
+    padding: 10px;
 }
 </style>

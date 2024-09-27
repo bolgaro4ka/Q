@@ -5,7 +5,9 @@ import axios from 'axios';
 
 const raw_res = await axios.get(FTP_ENDPOINT)
 
-const res = raw_res.data.res
+const res = raw_res.data.slice(8,-1)
+
+console.log(res)
 
 
 </script>
@@ -13,7 +15,7 @@ const res = raw_res.data.res
 <template>
     <div class="qftp">
         <div v-for="item in res">
-            <div>{{item[0]}}</div>
+            <div v-html="item[0]"></div>
             <div>{{item[1]}}</div>
         </div>
     </div>

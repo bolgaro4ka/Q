@@ -112,7 +112,7 @@
     .modal__content {
         position: absolute;
         z-index: 10;
-        background: #287a9b;
+        background: #2a3038;
         
         
       }

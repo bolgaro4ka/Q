@@ -11,7 +11,6 @@ const error= ref(false)
 const raw_page = await axios.post(VPN_ENDPOINT, {
     url: props.url
 }).catch((e) => {
-    console.log(e);
     error.value = true;
 })
 
@@ -19,10 +18,6 @@ const page = raw_page?.data?.html
 
 const url = ref(props.url)
 
-
-
-
-console.log(props.url)
 
 function changePath() {
     location.href = `/qvpn?url=${url.value}`

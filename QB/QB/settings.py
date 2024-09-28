@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d9oqck+)w=kt19=#+rba9hz^wb)u7^a%rcm72kts$)lqr!7ycq'
 
 ALLOWED_HOSTS = ['q.paia1nik.ru', 'https://q.paia1nik.ru', '*']
-CSRF_TRUSTED_ORIGINS=['https://q.paia1nik.ru']
+CSRF_TRUSTED_ORIGINS=['https://q.paia1nik.ru', 'http://192.168.0.228:3003']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -58,7 +58,8 @@ ROOT_URLCONF = 'QB.urls'
 
 CORS_ORIGIN_WHITELIST = [
     'https://q.paia1nik.ru',
-    'http://q.paia1nik.ru'
+    'http://q.paia1nik.ru',
+    'http://192.168.0.228:3003'
 ]
 
 TEMPLATES = [
@@ -88,6 +89,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://paia1nik.duckdns.org',
     'http://localhost:3003',
     'https://q.paia1nik.ru',
+    'http://192.168.0.228:3003'
 ]
 
 

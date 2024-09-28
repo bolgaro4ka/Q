@@ -7,7 +7,6 @@ const raw_res = await axios.get(FTP_ENDPOINT)
 
 const res = raw_res.data.slice(7,-1)
 
-console.log(res)
 
 
 </script>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { toNormalNumber, urlEncode, roundIfNumberHaveDotWithNumberAfterItMoreThanZero } from '@/common/main';
 
-const props = defineProps(['ot', 'st', 'in', 'cpages'])
+const props = defineProps(['ot', 'st', 'in', 'cpages', 'bottom'])
 </script>
 
 <template>
 <div class="pages">
-    <p class="pages__total">Всего результатов: <b>{{$props?.cpages}}</b></p>
+    <p class="pages__total" v-if="!$props.bottom">Всего результатов: <b>{{$props?.cpages}}</b></p>
     <div class="pages__nav">
         <div class="pages__prevs">
             <a 
@@ -15,8 +15,7 @@ const props = defineProps(['ot', 'st', 'in', 'cpages'])
             :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + parseInt(count)*10)}`">
         {{ count }}
         </a>
-        <p v-if="$props.in == 'w'" class="pages__count">Количество страниц: {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/10)}}</p>
-        <p v-if="$props.in == 'f'" class="pages__count">Количество страниц: {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/20)}}</p>    
+        
     </div>
         <div class="pages__nexts">
             <a 
@@ -25,9 +24,15 @@ const props = defineProps(['ot', 'st', 'in', 'cpages'])
             :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + parseInt(count)*10)}`">
         {{ count }}
         </a>
-        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + -1*10)}`"><- Предыдущие</a>
-        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + 1*10)}`">Следующие -></a>
+        <p v-if="$props.in == 'w'" class="pages__count">Количество страниц: {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/10)}}</p>
+        <p v-if="$props.in == 'f'" class="pages__count">Количество страниц: {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/20)}}</p>    
+        
         </div>
+    </div>
+    <div class="pages__navpn">
+        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + -1*10)}`"><- Предыдущие</a>
+        <p>{{Math.round(parseInt($props.ot) / 10 )}}</p>
+        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + 1*10)}`">Следующие -></a>
     </div>
 </div>
 </template>
@@ -58,5 +63,28 @@ const props = defineProps(['ot', 'st', 'in', 'cpages'])
     a {
         cursor: pointer;
     }
+}
+
+@media screen and (max-width: 700px) {
+
+    .pages__prevs :nth-child(even), .pages__nexts :nth-child(even) {
+        display: none;
+        flex-direction: column;
+    }
+    
+}
+
+.pages__navpn {
+    display: flex;
+    gap: 10px;
+    
+}
+
+.pages__navpn a {
+    color: purple;
+}
+
+.pages__navpn p {
+    color: var(--color-text);
 }
 </style>

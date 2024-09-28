@@ -2,7 +2,7 @@
 import QSearcherMini from '@/components/QSearcherMini.vue';
 import { REQ_ENDPOINT } from '@/config/main';
 import axios from 'axios';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { onBeforeRouteUpdate } from 'vue-router';
 import iconv from 'iconv-lite';
@@ -15,11 +15,6 @@ import Loader from './Loader.vue';
 const route = useRoute()
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 
-console.log(REQ_ENDPOINT)
-
-console.log(props.in, props.st)
-
-console.log(replaceSpecialSymbols(props.st))
 const g_find = ref(true)
 const d_find = ref(true)
 
@@ -43,6 +38,8 @@ function getHostname(url : string) {
 }
 
 
+const qgpt = localStorage.getItem('qgpt') == 'true' ? g_find.value = true : g_find.value = false
+
 
 
 
@@ -53,7 +50,7 @@ function getHostname(url : string) {
   <div v-if="raw_res.data.OK">
     <QSearcherMini :st="st" :in="in" v-if="d_find || g_find"/>
     <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages" v-if="d_find || g_find" />
-    <Suspense><QGPT :content="props.st" v-if="props.in == 'w'"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
+    <Suspense><QGPT :content="props.st" v-if="props.in == 'w' && qgpt"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
     
     <div class="finds__wrapper">
       <div class="finds__content">
@@ -77,14 +74,14 @@ function getHostname(url : string) {
           <p v-html="result.desc"  class="find_desc"></p>
           <p v-html="result.arch" class="find_arch"></p>
           <p class="rkn__block" v-if="result.class == 'rkn'">Возможно сайт заблокирован великим и не подражаемым РКН</p>
-          <div v-if="props.in == 'f'"><a :href="result.simular_url+'&ot=0'">[похожие файлы]</a><a :href="result.also_url+'&ot=0'">[найти файлы такого же размера]</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">[искать только на этом сервере]</a></div>
+          <div v-if="props.in == 'f'" class="find__links"><a :href="result.simular_url+'&ot=0'">[похожие файлы]</a><a :href="result.also_url+'&ot=0'">[найти файлы такого же размера]</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">[искать только на этом сервере]</a></div>
           <div class="find__saveWrapper" v-if="props.in == 'w'"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg><p v-html="result.saved" class="find_saved"></p></div>
         </template>
       </div>
       </div>
     </div>
     </div>
-    <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages"  v-if="d_find || g_find" />
+    <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages"  v-if="d_find || g_find" :bottom="true" style="margin-top: 20px;"/>
   </div>
   <div v-else>
     <QSearcherMini :st="st" :in="in"/>
@@ -98,7 +95,10 @@ function getHostname(url : string) {
 </template>
 
 <style scoped lang="scss">
-
+.find__links {
+  display: flex;
+  gap: 10px;
+}
 .finds__wrapper {
   margin: 0 auto;
   max-width: 2000px;
@@ -115,6 +115,29 @@ function getHostname(url : string) {
 
 .f_cls .find_link *:visited {
   color: #c58af9;
+}
+
+@media screen and (max-width: 739px) {
+  .f_cls .table  {
+    display: flex;
+    font-size: calc( ( 1vh) * .86 );
+
+    
+  }
+
+  .f_cls * {
+    word-wrap: break-word;
+  }
+  
+}
+
+@media screen and (min-width: 739px) {
+  .f_cls {
+    width: 722px;
+    max-width: 722px;
+    min-width: 721px;
+  }
+  
 }
 
 .finds {
@@ -136,6 +159,12 @@ function getHostname(url : string) {
   }
 
   
+}
+
+@media screen and (max-width: 600px) {
+  .find {
+    max-width: 90dvw;
+  }
 }
 
 .rkn {
@@ -177,11 +206,7 @@ b {
   font-size: 7px;
 }
 
-.f_cls {
-  width: 722px;
-  max-width: 722px;
-  min-width: 721px;
-}
+
 
 .table tbody * {
   color: green !important;

@@ -3,17 +3,13 @@ import { GPT_ENDPOINT } from '@/config/main';
 import axios from 'axios';
 import { marked } from 'marked';
 
-const CONTEXT = ''
-
 const props = defineProps(['content'])
 
 const raw_res = await axios.post(GPT_ENDPOINT, {
-    content: props.content+CONTEXT
+    content: props.content
 })
 
 const res = marked(raw_res.data.res)
-
-
 </script>
 
 
@@ -30,10 +26,16 @@ const res = marked(raw_res.data.res)
 
 <style lang="scss" scoped>
 .qgpt {
-    border-image: var(--qgpt-gradient) 30;
-    border-style: solid;
-    border-width: 2px;
+    border: none;
+    border-radius: 10px;
     background-color: #232222;
+    background-blend-mode: screen;
+	background:
+		linear-gradient(limegreen, transparent),
+		linear-gradient(90deg, skyblue, transparent),
+		linear-gradient(-90deg, coral, transparent);
+    background-size: 400% 400%;
+    animation: gradient-animation 20s ease infinite;
     
     color: white;
     padding: 10px;
@@ -44,5 +46,19 @@ const res = marked(raw_res.data.res)
     margin: 0 auto;
     max-width: 1570px;
 }
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
 </style>
 

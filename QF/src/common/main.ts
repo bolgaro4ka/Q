@@ -62,7 +62,6 @@ export function toNormalNumber (s: string) {
             if (!ss[i+1]) {res+=parseInt(ss[i]); break}
             if (i%2!=0) continue
             res += parseInt(ss[i])*parseInt(ss[i+1])
-            console.log(ss[i],ss[i+1],res, i)
         }
     return res
 

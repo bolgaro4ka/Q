@@ -83,7 +83,7 @@
             </svg>
           </div>
         </div>
-        <div @close="() => emits('close')">
+        <div @close="() => {emits('close')}">
           <slot></slot>
         </div>
       </div>

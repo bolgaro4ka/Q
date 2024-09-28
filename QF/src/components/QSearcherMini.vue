@@ -96,7 +96,7 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
         
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 777px) {
         .searcher__head {
             display: flex;
             flex-direction: column;

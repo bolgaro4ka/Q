@@ -30,9 +30,9 @@ const props = defineProps(['ot', 'st', 'in', 'cpages', 'bottom'])
         </div>
     </div>
     <div class="pages__navpn">
-        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + -1*10)}`"><- Предыдущие</a>
+        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + -1*10)}`"><- Предыдущая</a>
         <p>{{Math.round(parseInt($props.ot) / 10 )}}</p>
-        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + 1*10)}`">Следующие -></a>
+        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + 1*10)}`">Следующая -></a>
     </div>
 </div>
 </template>

@@ -71,7 +71,7 @@ onMounted(() => {
 
     <div class="q__bottom">
         <div class="author">
-            <p>Сделано <a href="https://github.com/bolgaro4ka">bolgaro4ka</a> <a href="https://t.me/papyas_07">(telegram)</a> на сервере и сети доменов <a href="https://github.com/Paia1nik">Paia1nik`а</a> <a href="https://t.me/Paia1nik">(telegram)</a> /// <a href="https://github.com/bolgaro4ka/Q">Этот проект на GitHub</a> /// <a href="https://github.com/bolgaro4ka/Q/blob/main/LICENSE">Лицензия</a></p>
+            <p>Сделано <a href="https://github.com/bolgaro4ka">bolgaro4ka</a> <a href="https://t.me/papyas_07">(telegram)</a> /// <a href="https://github.com/bolgaro4ka/Q">Этот проект на GitHub</a> /// <a href="https://github.com/bolgaro4ka/Q/blob/main/LICENSE">Лицензия</a></p>
         </div>
     </div>
 

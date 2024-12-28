@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-d9oqck+)w=kt19=#+rba9hz^wb)u7^a%rcm72kts$)lqr!7ycq'
 
-ALLOWED_HOSTS = ['q.paia1nik.ru', 'https://q.paia1nik.ru', '*']
-CSRF_TRUSTED_ORIGINS=['https://q.paia1nik.ru', 'http://192.168.0.228:3003']
+ALLOWED_HOSTS = ['q.paia1nik.ru', 'https://qb.blgr.space', '*']
+CSRF_TRUSTED_ORIGINS=['https://qb.blgr.space', 'http://192.168.0.228:3003']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -57,8 +57,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'QB.urls'
 
 CORS_ORIGIN_WHITELIST = [
-    'https://q.paia1nik.ru',
-    'http://q.paia1nik.ru',
+    'https://qb.blgr.space',
+    'http://qb.blgr.space',
     'http://192.168.0.228:3003'
 ]
 
@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'QB.wsgi.application'
 CORS_ALLOWED_ORIGINS = [
     'https://paia1nik.duckdns.org',
     'http://localhost:3003',
-    'https://q.paia1nik.ru',
+    'https://qb.blgr.space',
     'http://192.168.0.228:3003'
 ]
 

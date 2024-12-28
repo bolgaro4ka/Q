@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/',
   server: {
     port: 4002, // change to your desired port
     host: '0.0.0.0',

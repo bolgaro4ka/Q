@@ -80,9 +80,9 @@ class QVPNView(generics.GenericAPIView):
 
             if 'href' in a_tags.attrs:
                 if a_tags.attrs['href'].startswith('http'):
-                    a_tags.attrs['href'] = f'http://localhost:3003/qvpn/?url='+a_tags.attrs['href']
+                    a_tags.attrs['href'] = f'https://q.blgr.space/qvpn/?url='+a_tags.attrs['href']
                 else:
-                    a_tags.attrs['href'] = f'http://localhost:3003/qvpn/?url={url}'+a_tags.attrs['href']
+                    a_tags.attrs['href'] = f'https://q.blgr.space/qvpn/?url={url}'+a_tags.attrs['href']
 
         return Response({'html': soup.prettify(encoding='utf-8'), 'url': url, 'res': 'OK'}, status=200)
 
@@ -139,7 +139,7 @@ class StatusView(generics.GenericAPIView):
                 font_tag['color'] = '#fff'
 
             for tr_tag in soup_mamont.find_all('tr'):
-                tr_tag['bgcolor'] = '#232222'
+                tr_tag['bgcolor'] = 'var(--color-secondary)'
 
             for p_cache in soup_mamont.find_all('p', class_='cache_p'):
                 p_cache.a['href'] = 'https://www.mmnt.ru' + p_cache.a['href']
@@ -204,4 +204,4 @@ class StatusView(generics.GenericAPIView):
             req['cpages'] = cpages
             return Response(req)
         except IndexError as e:
-            return Response({'error': str(e), 'OK': False})
+            return Response({'error': '404', 'OK': False})

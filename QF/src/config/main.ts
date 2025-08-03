@@ -1,4 +1,4 @@
-const BASE_URL =  'https://qb.blgr.space'; //; 'http://192.168.0.228:8003'
+const BASE_URL =  'https://qb.blgr.space'; //; 'http://localhost:8003'
 
 const REQ_ENDPOINT = BASE_URL + '/api/post/'
 const VPN_ENDPOINT = BASE_URL + '/api/qvpn/'

@@ -52,7 +52,7 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
         width: 125px;
         height: 125px;
         border-radius: 10000px;
-        border: 10px solid purple;
+        border: 10px solid var(--color-main);
         position: absolute;
         z-index: 1;
     }
@@ -68,7 +68,7 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
             z-index: 2;
             position: relative;
             outline: none;
-            background-color: #232222;
+            background-color: var(--color-secondary);
             border: none;
             border-radius: 10px 0px 0 10px;
             width: 70%;
@@ -84,7 +84,7 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
         top: 10px;
         height: 30px;
         padding-right: 10px;
-        background-color: #232222;
+        background-color: var(--color-secondary);
     }
 
     @media (min-width: 700px) {
@@ -135,6 +135,6 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
     }
 
     .searcher_active {
-        border-bottom: 2px solid purple;
+        border-bottom: 2px solid var(--color-main);
     }
 </style>

@@ -28,7 +28,7 @@ const res = marked(raw_res.data.res)
 .qgpt {
     border: none;
     border-radius: 10px;
-    background-color: #232222;
+    background-color: var(--color-secondary);
     background-blend-mode: screen;
 	background:
 		linear-gradient(limegreen, transparent),

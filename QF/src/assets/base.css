@@ -4,6 +4,9 @@
     --color-background-soft: #222222;
     --color-background-mute: #282828;
 
+    --color-main: #800080;
+    --color-secondary: #232222;
+
     --color-heading: #fff;
     --color-text: rgba(255, 255, 255, 0.5);
     --google-gradient: linear-gradient(90deg, #eb493b 0%, #fbbc05 30%, #34a853 60%, #4285f4 100%);
@@ -15,7 +18,7 @@
 * {
   box-sizing: border-box;
   margin: 0;
-  scrollbar-color: purple #2a3038 ;
+  scrollbar-color: var(--color-main) #2a3038 ;
 }
 
 body {

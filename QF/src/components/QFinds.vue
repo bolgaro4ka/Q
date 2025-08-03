@@ -2,7 +2,7 @@
 import QSearcherMini from '@/components/QSearcherMini.vue';
 import { REQ_ENDPOINT } from '@/config/main';
 import axios from 'axios';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { onBeforeRouteUpdate } from 'vue-router';
 import iconv from 'iconv-lite';
@@ -38,7 +38,7 @@ function getHostname(url : string) {
 }
 
 
-const qgpt = localStorage.getItem('qgpt') == 'true' ? g_find.value = true : g_find.value = false
+const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) ? Number(localStorage.getItem('qgpt') ) : 1)
 
 
 
@@ -50,7 +50,7 @@ const qgpt = localStorage.getItem('qgpt') == 'true' ? g_find.value = true : g_fi
   <div v-if="raw_res.data.OK">
     <QSearcherMini :st="st" :in="in" v-if="d_find || g_find"/>
     <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages" v-if="d_find || g_find" />
-    <Suspense><QGPT :content="props.st" v-if="props.in == 'w' && qgpt"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
+    <Suspense><QGPT :content="props.st" v-if="props.in == 'w' && qgpt == 1"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
     
     <div class="finds__wrapper">
       <div class="finds__content">

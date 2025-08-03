@@ -81,7 +81,7 @@ const props = defineProps(['ot', 'st', 'in', 'cpages', 'bottom'])
 }
 
 .pages__navpn a {
-    color: purple;
+    color: var(--color-main);
 }
 
 .pages__navpn p {

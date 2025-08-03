@@ -7,7 +7,7 @@ import Modal from './Modal.vue';
 import PopupSettings from './PopupSettings.vue';
 import QFTP from './QFTP.vue';
 import Loader from './Loader.vue';
-const router = useRouter();
+import AddTab from './Modals/AddTab.vue';
 
 const query = ref('')
 const mode : Ref<string> = ref('')
@@ -18,6 +18,7 @@ onMounted(() => {
 
 const isSettingsPopupOpen = ref(false)
 const isFTPPopupOpen = ref(false)
+const isAddTabOpen = ref(false)
 
 
 function handleClick(e : Event) {
@@ -26,23 +27,28 @@ function handleClick(e : Event) {
     // router.push(`/get?st=${query.value}&in=w`)
 }
 
+function handleAddTab(e : Event) {
+    isAddTabOpen.value = true
+}
+
+function handleDeleteTab(e : Event) {
+    const Ltabs = JSON.parse(localStorage.getItem('tabs') || '[]') as Array<{title: string, url: string}>;
+    Ltabs.splice(Number((e.target as HTMLButtonElement).dataset.index), 1)
+    localStorage.setItem('tabs', JSON.stringify(Ltabs));
+
+    tabs.value = Ltabs
+}
+
 window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter') handleClick(e);} )
 
 onMounted(() => {
-    const background = localStorage.getItem('url')
-    if (background) {
-        document.body.style.backgroundImage = `url(${background})`
-    }
-
-    if (background == undefined) {
-        document.body.style.backgroundImage = `url(https://scientificrussia.ru/images/i/31qi-full.jpg)`
-    }
-
-    const qgpt = localStorage.getItem('qgpt')
-    if (qgpt == undefined) {
-        localStorage.setItem('qgpt', 'true')
-    }
+    document.body.style.backgroundImage = `url(${localStorage.getItem('url') || 'https://scientificrussia.ru/images/i/31qi-full.jpg'})`;
 })
+
+
+const tabs = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem('tabs') as string) : []) // [{"title": "title", "url": "url"}]
+
+
 
 </script>
 
@@ -53,6 +59,17 @@ onMounted(() => {
             <div class="searcher">
                 <input type="text" v-model="query" autofocus>
                 <div  @click="handleClick" class="searcher_svg"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg></div>
+            </div>
+            <div class="searcher__tabs">
+
+                <a v-for="tab in tabs" :href="tab.url" target="_blank" class="searcher__tab" @click.right.prevent="handleDeleteTab">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M160-240h640v-320H520v-160H160v480Zm0 80q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80v-480 480Z"/></svg>
+                    <p>{{tab.title}}</p>
+                </a>
+                <div @click="handleAddTab" class="searcher__tab">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h240v80H200v560h560v-240h80v240q0 33-23.5 56.5T760-120H200Zm440-400v-120H520v-80h120v-120h80v120h120v80H720v120h-80Z"/></svg>
+                    <p style="text-align: center; color: var(--color-text);">Добавить<br/> вкладку</p>
+                </div>
             </div>
             
         </div>
@@ -71,7 +88,7 @@ onMounted(() => {
 
     <div class="q__bottom">
         <div class="author">
-            <p>Сделано <a href="https://github.com/bolgaro4ka">bolgaro4ka</a> <a href="https://t.me/papyas_07">(telegram)</a> /// <a href="https://github.com/bolgaro4ka/Q">Этот проект на GitHub</a> /// <a href="https://github.com/bolgaro4ka/Q/blob/main/LICENSE">Лицензия</a></p>
+            <p>Сделано <a href="https://github.com/bolgaro4ka">bolgaro4ka</a> <a href="https://t.me/blgr4k">(telegram)</a> /// <a href="https://github.com/bolgaro4ka/Q">Этот проект на GitHub</a> /// <a href="https://github.com/bolgaro4ka/Q/blob/main/LICENSE">Лицензия</a></p>
         </div>
     </div>
 
@@ -90,6 +107,15 @@ onMounted(() => {
         </Modal>
     </Teleport>
 
+    <Teleport to="body">
+        <Modal v-if="isAddTabOpen" @close="isAddTabOpen = false"  title="Добавить вкладку">
+            <Suspense>
+                <AddTab />
+                <template #fallback><Loader style="height: 400px;"/></template>
+            </Suspense>
+        </Modal>
+    </Teleport>
+
 
     
 </template>
@@ -103,7 +129,7 @@ onMounted(() => {
     height: 40px;
     width: 40px;
     border-radius: 10000px;
-    background-color: #232222;
+    background-color: var(--color-secondary);
     text-align: center;
     display: flex;
     z-index: 30;
@@ -137,7 +163,7 @@ onMounted(() => {
         width: calc( ( 1vh + 1vw ) * 30 );
         height: calc( ( 1vh + 1vw ) * 30 );
         border-radius: 10000px;
-        border: 100px solid purple;
+        border: 100px solid var(--color-main);
         position: absolute;
         z-index: 1;
     }
@@ -180,7 +206,7 @@ onMounted(() => {
         input {
            
             outline: none;
-            background-color: #232222;
+            background-color: var(--color-secondary);
             border: none;
             border-radius: 10px 0px 0 10px;
             width: 90%;
@@ -196,7 +222,7 @@ onMounted(() => {
         
         height: 40px;
         padding-right: 10px;
-        background-color: #232222;
+        background-color: var(--color-secondary);
     }
 
     .searcher_svg {
@@ -208,7 +234,7 @@ onMounted(() => {
 
     @media (max-width: 800px) {
         .circle {
-            border: 50px solid purple;
+            border: 50px solid var(--color-main);
         }
         
     }
@@ -259,12 +285,39 @@ onMounted(() => {
     }
 
     .searcher_active {
-        border-bottom: 2px solid purple;
+        border-bottom: 2px solid var(--color-main);
     }
 
     .searcher__ftp {
         position: absolute;
         top: 10px;
         left: 10px;
+    }
+
+    .searcher__tabs {
+        position: absolute;
+        top: 60%;
+        left: 60%;
+        display: flex;
+        gap: 10px;
+    }
+
+    .searcher__tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    @media screen and (max-width: 700px) {
+        .searcher__tabs {
+            top: 50%;
+            left: calc(0);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
     }
 </style>

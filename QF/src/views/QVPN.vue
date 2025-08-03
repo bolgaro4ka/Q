@@ -27,7 +27,7 @@ function changePath() {
 <template>
     <div >
         <div class="qvpn">
-            <RouterLink to="/" style="display: flex;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="purple"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg></RouterLink>
+            <RouterLink to="/" style="display: flex;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--color-main)"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg></RouterLink>
             <p>QVPN</p>
             <input type="text" class="qvpn-input" v-model="url" @keypress.enter="changePath()">
         </div>
@@ -51,7 +51,7 @@ function changePath() {
     align-items: center !important;
 
     p {
-        background-color: purple !important;
+        background-color: var(--color-main) !important;
         padding: 5px !important;
         border-radius: 5px !important;
         color: white !important;
@@ -61,7 +61,7 @@ function changePath() {
 
 .qvpn-input {
     color: black !important;
-    border: 1px solid purple !important;
+    border: 1px solid var(--color-main) !important;
     width: 100%;
     outline: none !important;
 }

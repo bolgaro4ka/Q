@@ -41,7 +41,7 @@
     width: 12px;
     height: 12px;
     border-radius: 3px;
-    background: purple;
+    background: var(--color-main);
   }
 
   .loader {

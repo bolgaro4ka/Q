@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { toNormalNumber, urlEncode, roundIfNumberHaveDotWithNumberAfterItMoreThanZero } from '@/common/main';
+import { lang, LC_1_000, LC_1_000_000, LC_1_000_000_000, LC_NEXT_PAGE, LC_NUMBER_OF_PAGES, LC_NUMBER_OF_RESULTS, LC_PREVIOUS_PAGE } from '@/locale/dict';
 
 const props = defineProps(['ot', 'st', 'in', 'cpages', 'bottom'])
 </script>
 
 <template>
 <div class="pages">
-    <p class="pages__total" v-if="!$props.bottom">Всего результатов: <b>{{$props?.cpages}}</b></p>
+    <p class="pages__total" v-if="!$props.bottom">{{ LC_NUMBER_OF_RESULTS[lang] }} <b>{{$props?.cpages.replace('млн.', LC_1_000_000[lang]).replace('тыс.', LC_1_000[lang]).replace('млдр.', LC_1_000_000_000[lang])}}</b></p>
     <div class="pages__nav">
         <div class="pages__prevs">
             <a 
@@ -24,15 +25,15 @@ const props = defineProps(['ot', 'st', 'in', 'cpages', 'bottom'])
             :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + parseInt(count)*10)}`">
         {{ count }}
         </a>
-        <p v-if="$props.in == 'w'" class="pages__count">Количество страниц: {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/10)}}</p>
-        <p v-if="$props.in == 'f'" class="pages__count">Количество страниц: {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/20)}}</p>    
+        <p v-if="$props.in == 'w'" class="pages__count">{{ LC_NUMBER_OF_PAGES[lang] }} {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/10)}}</p>
+        <p v-if="$props.in == 'f'" class="pages__count">{{ LC_NUMBER_OF_PAGES[lang] }} {{roundIfNumberHaveDotWithNumberAfterItMoreThanZero(toNormalNumber($props.cpages)/20)}}</p>    
         
         </div>
     </div>
     <div class="pages__navpn">
-        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + -1*10)}`"><- Предыдущая</a>
+        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + -1*10)}`">{{ LC_PREVIOUS_PAGE[lang] }}</a>
         <p>{{Math.round(parseInt($props.ot) / 10 )}}</p>
-        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + 1*10)}`">Следующая -></a>
+        <a :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + 1*10)}`">{{ LC_NEXT_PAGE[lang] }}</a>
     </div>
 </div>
 </template>

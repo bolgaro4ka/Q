@@ -6,7 +6,8 @@ import urllib.parse
 from . import common
 import g4f
 from django.conf import settings
-
+import os
+from openai import OpenAI
 
 class GetGPTView(generics.GenericAPIView):
     def post(self, request, format=None):
@@ -17,6 +18,22 @@ class GetGPTView(generics.GenericAPIView):
             res = 'Backend Error: no content in post data'
             return Response({'res': res}, status=500)
         
+        if req['chatgpt_api_key'] != '':
+            try:
+                client = OpenAI(api_key=req['chatgpt_api_key'])
+
+                response = client.chat.completions.create(
+                model="gpt-4",  # или "gpt-3.5-turbo"
+                messages=[
+                    {"role": "system", "content": "Ты — полезный помощник."},
+                    {"role": "user", "content": "Придумай идею для стартапа."}
+                ],
+                temperature=0.7,
+                max_tokens=300,
+            )
+                return Response({'res': response.choices[0].message['content']})
+            except Exception as e:
+                return Response({'res': str(e)})
 
         response = g4f.ChatCompletion.create(model="gpt-4", messages=[{"role": "user", "content": content}])
 
@@ -32,7 +49,6 @@ class GetGPTView(generics.GenericAPIView):
         return Response({'res': response})
         
 
-# Create your views here.
 class GetFTPSView(generics.GenericAPIView):
     def get(self, request, format=None):
         manont_soup = BeautifulSoup(requests.get('https://www.mmnt.ru/ftp-sites').text, 'html.parser')

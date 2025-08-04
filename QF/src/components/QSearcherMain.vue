@@ -3,11 +3,12 @@ import { onMounted, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { replaceSpecialSymbols } from '@/common/main';
-import Modal from './Modal.vue';
-import PopupSettings from './PopupSettings.vue';
+import Modal from './Base/Modal.vue';
+import PopupSettings from './Modals/PopupSettings.vue';
 import QFTP from './QFTP.vue';
-import Loader from './Loader.vue';
+import Loader from './Base/Loader.vue';
 import AddTab from './Modals/AddTab.vue';
+import { lang, LC_ADD_TAB, LC_LIST_OF_FTP_SERVERS, LC_QVPN, LC_SEARCH_IN_FIELS, LC_SEARCH_IN_INTERNET, LC_SETTINGS_Q, LC_VHTML_ABOUT } from '@/locale/dict';
 
 const query = ref('')
 const mode : Ref<string> = ref('')
@@ -68,15 +69,15 @@ const tabs = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem(
                 </a>
                 <div @click="handleAddTab" class="searcher__tab">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h240v80H200v560h560v-240h80v240q0 33-23.5 56.5T760-120H200Zm440-400v-120H520v-80h120v-120h80v120h120v80H720v120h-80Z"/></svg>
-                    <p style="text-align: center; color: var(--color-text);">Добавить<br/> вкладку</p>
+                    <p style="text-align: center; color: var(--color-text);">{{ LC_ADD_TAB[lang] }}</p>
                 </div>
             </div>
             
         </div>
         <div class="searcher__links">
-            <a :class="(mode == 'f') && 'searcher_active' " @click="mode = 'f'">Поиск среди файлов</a>
-            <a :class="(mode == 'w') && 'searcher_active' " @click="mode = 'w'">Поиск по интернету</a>
-            <a :class="(mode == 'q') && 'searcher_active' " @click="mode = 'q'">QVPN (только URL)</a>
+            <a :class="(mode == 'f') && 'searcher_active' " @click="mode = 'f'">{{ LC_SEARCH_IN_FIELS[lang] }}</a>
+            <a :class="(mode == 'w') && 'searcher_active' " @click="mode = 'w'">{{ LC_SEARCH_IN_INTERNET[lang] }}</a>
+            <a :class="(mode == 'q') && 'searcher_active' " @click="mode = 'q'">{{ LC_QVPN[lang] }}</a>
         </div>
         <div class="searcher__edit" @click="isSettingsPopupOpen = true">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
@@ -88,18 +89,18 @@ const tabs = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem(
 
     <div class="q__bottom">
         <div class="author">
-            <p>Сделано <a href="https://github.com/bolgaro4ka">bolgaro4ka</a> <a href="https://t.me/blgr4k">(telegram)</a> /// <a href="https://github.com/bolgaro4ka/Q">Этот проект на GitHub</a> /// <a href="https://github.com/bolgaro4ka/Q/blob/main/LICENSE">Лицензия</a></p>
+            <p v-html="LC_VHTML_ABOUT[lang]"></p>
         </div>
     </div>
 
     <Teleport to="body">
-        <Modal v-if="isSettingsPopupOpen" @close="isSettingsPopupOpen = false"  title="Настройки Q">
+        <Modal v-if="isSettingsPopupOpen" @close="isSettingsPopupOpen = false"  :title="LC_SETTINGS_Q[lang]">
             <PopupSettings />
         </Modal>
     </Teleport>
 
     <Teleport to="body">
-        <Modal v-if="isFTPPopupOpen" @close="isFTPPopupOpen = false"  title="Список FTP серверов Q">
+        <Modal v-if="isFTPPopupOpen" @close="isFTPPopupOpen = false"  :title="LC_LIST_OF_FTP_SERVERS[lang]">
             <Suspense>
                 <QFTP />
                 <template #fallback><Loader style="height: 400px;"/></template>
@@ -108,7 +109,7 @@ const tabs = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem(
     </Teleport>
 
     <Teleport to="body">
-        <Modal v-if="isAddTabOpen" @close="isAddTabOpen = false"  title="Добавить вкладку">
+        <Modal v-if="isAddTabOpen" @close="isAddTabOpen = false"  :title="LC_ADD_TAB[lang]">
             <Suspense>
                 <AddTab />
                 <template #fallback><Loader style="height: 400px;"/></template>
@@ -300,6 +301,9 @@ const tabs = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem(
         left: 60%;
         display: flex;
         gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 400px;
     }
 
     .searcher__tab {
@@ -307,12 +311,14 @@ const tabs = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem(
         flex-direction: column;
         align-items: center;
         cursor: pointer;
+
     }
 
     @media screen and (max-width: 700px) {
         .searcher__tabs {
-            top: 50%;
+            top: 40%;
             left: calc(0);
+            max-width: none;
             width: 100%;
             display: flex;
             justify-content: center;

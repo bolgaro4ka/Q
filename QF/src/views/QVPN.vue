@@ -3,7 +3,7 @@ import { BASE_URL, VPN_ENDPOINT } from '@/config/main';
 import axios from 'axios';
 import { ref } from 'vue';
 import { decodeUTF8 } from '@/common/main';
-import NoFound from '@/components/NoFound.vue';
+import NoFound from '@/components/Base/NoFound.vue';
 
 
 const props = defineProps(['url'])

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import QFinds from '@/components/QFinds.vue';
-import Loader from '@/components/Loader.vue';
+import Loader from '@/components/Base/Loader.vue';
 
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 </script>

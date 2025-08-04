@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Loader from '@/components/Loader.vue';
+import Loader from '@/components/Base/Loader.vue';
 import QSearcherMain from '@/components/QSearcherMain.vue';
 
 

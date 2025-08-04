@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { GPT_ENDPOINT } from '@/config/main';
+import { lang, LC_QGPT_NOT_ANSWER, LC_VHTML_ANSWER_OF_QGPT } from '@/locale/dict';
 import axios from 'axios';
 import { marked } from 'marked';
 
-const props = defineProps(['content'])
+const props = defineProps(['content', 'mode'])
 
 const raw_res = await axios.post(GPT_ENDPOINT, {
-    content: props.content
+    content: props.content,
+    chatgpt_api_key: props.mode == 2 ? localStorage.getItem('openai_key') : ''
 })
 
 const res = marked(raw_res.data.res)
@@ -17,9 +19,9 @@ const res = marked(raw_res.data.res)
  <div class="qgpt-container">
     
     <div class="qgpt">
-        <h3>Ответ <span style="color: #f6d614;">Q</span><span style="color: #53a7c8;">G</span><span style="color: #f07d02;">P</span><span style="color: #ffb6e6;">T</span>:</h3>
+        <h3 v-html="LC_VHTML_ANSWER_OF_QGPT[lang]"></h3>
         <p v-html="res" v-if="res"></p>
-        <p v-else>QGPT не отвечает. Попробуйте перезагрузить страницу</p>
+        <p v-else>{{ LC_QGPT_NOT_ANSWER[lang] }}</p>
     </div>
 </div>
 </template>

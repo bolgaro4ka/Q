@@ -3,7 +3,11 @@ import { ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { replaceSpecialSymbols } from '@/common/main';
+import { lang as langRaw, LC_SEARCH_IN_FIELS, LC_SEARCH_IN_INTERNET } from '@/locale/dict';
 const router = useRouter();
+
+type LangKey = keyof typeof LC_SEARCH_IN_FIELS;
+const lang = langRaw as LangKey;
 
 const query = ref('')
 const ein : Ref<string> = ref('')
@@ -33,8 +37,8 @@ window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter'
             
         </div>
         <div class="searcher__links">
-            <a :class="(ein == 'f') && 'searcher_active' " @click="(e) =>handleClick(e, 'f')">Поиск среди файлов</a>
-            <a :class="(ein == 'w') && 'searcher_active' " @click="(e) =>handleClick(e, 'w')">Поиск по интернету</a>
+            <a :class="(ein == 'f') && 'searcher_active' " @click="(e) =>handleClick(e, 'f')">{{ LC_SEARCH_IN_FIELS[lang] }}</a>
+            <a :class="(ein == 'w') && 'searcher_active' " @click="(e) =>handleClick(e, 'w')">{{ LC_SEARCH_IN_INTERNET[lang] }}</a>
         </div>
     </div>
 </template>

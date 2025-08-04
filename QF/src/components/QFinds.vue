@@ -8,10 +8,43 @@ import { onBeforeRouteUpdate } from 'vue-router';
 import iconv from 'iconv-lite';
 import QPages from '@/components/QPages.vue';
 import { replaceSpecialSymbols} from '@/common/main';
-import NoFound from '@/components/NoFound.vue';
+import NoFound from '@/components/Base/NoFound.vue';
 import QGPT from './QGPT.vue';
-import Loader from './Loader.vue';
+import Loader from './Base/Loader.vue';
+import { lang, LC_ARCHIVE_LINK, LC_SAVED, LC_SEARCH_FIELS_SAME_SIZE, LC_SEARCH_ONLY_ON_THIS_SERVER, LC_SIMULAR_FIELS, LC_SITE_MAYBE_BLOCK_RKN } from '@/locale/dict';
+import { LC_JANUARY, LC_FEBRUARY, LC_MARCH, LC_APRIL, LC_MAY, LC_JUNE, LC_JULY, LC_AUGUST, LC_SEPTEMBER, LC_OCTOBER, LC_NOVEMBER, LC_DECEMBER } from '@/locale/dict';
 
+function localizeSaved(saved: string): string {
+  console.log(saved)
+  let s = saved
+    .replace('Сохранено', LC_SAVED[lang].slice(0, LC_SAVED[lang].length-1))
+    .replace('января', LC_JANUARY[lang])
+    .replace('февраля', LC_FEBRUARY[lang])
+    .replace('марта', LC_MARCH[lang])
+    .replace('апреля', LC_APRIL[lang])
+    .replace('мая', LC_MAY[lang])
+    .replace('июня', LC_JUNE[lang])
+    .replace('июля', LC_JULY[lang])
+    .replace('августа', LC_AUGUST[lang])
+    .replace('сентября', LC_SEPTEMBER[lang])
+    .replace('октября', LC_OCTOBER[lang])
+    .replace('ноября', LC_NOVEMBER[lang])
+    .replace('декабря', LC_DECEMBER[lang])
+    .replace('Сохранено', LC_SAVED[lang].slice(0, LC_SAVED[lang].length-1))
+    .replace('января', LC_JANUARY[lang])
+    .replace('февраля', LC_FEBRUARY[lang])
+    .replace('марта', LC_MARCH[lang])
+    .replace('апреля', LC_APRIL[lang])
+    .replace('мая', LC_MAY[lang])
+    .replace('июня', LC_JUNE[lang])
+    .replace('июля', LC_JULY[lang])
+    .replace('августа', LC_AUGUST[lang])
+    .replace('сентября', LC_SEPTEMBER[lang])
+    .replace('октября', LC_OCTOBER[lang])
+    .replace('ноября', LC_NOVEMBER[lang])
+    .replace('декабря', LC_DECEMBER[lang]);
+  return s;
+}
 const route = useRoute()
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 
@@ -50,7 +83,7 @@ const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) ? Num
   <div v-if="raw_res.data.OK">
     <QSearcherMini :st="st" :in="in" v-if="d_find || g_find"/>
     <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages" v-if="d_find || g_find" />
-    <Suspense><QGPT :content="props.st" v-if="props.in == 'w' && qgpt == 1"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
+    <Suspense><QGPT :content="props.st" v-if="props.in == 'w' && qgpt != 0" :mode="qgpt"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
     
     <div class="finds__wrapper">
       <div class="finds__content">
@@ -72,10 +105,14 @@ const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) ? Num
           <p v-html="result.url" class="find_url"></p>
           <div class="table" v-html="result.table"></div>
           <p v-html="result.desc"  class="find_desc"></p>
-          <p v-html="result.arch" class="find_arch"></p>
-          <p class="rkn__block" v-if="result.class == 'rkn'">Возможно сайт заблокирован великим и не подражаемым РКН</p>
-          <div v-if="props.in == 'f'" class="find__links"><a :href="result.simular_url+'&ot=0'">[похожие файлы]</a><a :href="result.also_url+'&ot=0'">[найти файлы такого же размера]</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">[искать только на этом сервере]</a></div>
-          <div class="find__saveWrapper" v-if="props.in == 'w'"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg><p v-html="result.saved" class="find_saved"></p></div>
+          <p v-html="result.arch.replace('Архивная ссылка (web.archive.org)', LC_ARCHIVE_LINK[lang])" class="find_arch"></p>
+          <p class="rkn__block" v-if="result.class == 'rkn'">{{ LC_SITE_MAYBE_BLOCK_RKN[lang] }}</p>
+          <div v-if="props.in == 'f'" class="find__links"><a :href="result.simular_url+'&ot=0'">{{ LC_SIMULAR_FIELS[lang] }}</a><a :href="result.also_url+'&ot=0'">{{ LC_SEARCH_FIELS_SAME_SIZE[lang] }}</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">{{ LC_SEARCH_ONLY_ON_THIS_SERVER[lang] }}</a></div>
+          <div class="find__saveWrapper" v-if="props.in == 'w'">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
+            <p v-html="localizeSaved(result.saved)" class="find_saved"></p>
+          </div>
+
         </template>
       </div>
       </div>

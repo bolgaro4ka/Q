@@ -1,5 +1,5 @@
 // dynamic var with lang value
-export const lang: string = localStorage.getItem('lang') ?? 'ja'
+export const lang: string = localStorage.getItem('lang') ?? 'ru'
 
 // Языки: ru, en, ch, ja, pt, ar, az, be, el, ko, ro, es, fr, de, it, tr, hi
 // ja - японский, pt - португальский, ar - арабский, az - азербайджанский, be - белорусский, el - греческий, ko - корейский, ro - цыганский (романи), es - испанский, fr - французский, de - немецкий, it - итальянский, tr - турецкий, hi - хинди

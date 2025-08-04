@@ -12,6 +12,7 @@ import { lang, LC_ADD_TAB, LC_LIST_OF_FTP_SERVERS, LC_QVPN, LC_SEARCH_IN_FIELS, 
 
 const query = ref('')
 const mode : Ref<string> = ref('')
+const router = useRouter()
 
 onMounted(() => {
     mode.value = 'w'
@@ -23,8 +24,8 @@ const isAddTabOpen = ref(false)
 
 
 function handleClick(e : Event) {
-    if (mode.value != 'q') location.href = `/get?st=${replaceSpecialSymbols(query.value)}&in=${mode.value}&ot=0`
-    if (mode.value == 'q') location.href = `/qvpn?url=${query.value}`
+    if (mode.value != 'q') router.push({ name: 'get', query: { st: replaceSpecialSymbols(query.value), in: mode.value, ot: '0' } });
+    if (mode.value == 'q') router.push({ name: 'qvpn', query: { url: query.value } });
     // router.push(`/get?st=${query.value}&in=w`)
 }
 

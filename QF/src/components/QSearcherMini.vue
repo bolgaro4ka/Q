@@ -14,8 +14,7 @@ const ein : Ref<string> = ref('')
 
 function handleClick(e : Event, mode?: string) {
     if (mode) ein.value = mode
-    location.href = `/get?st=${replaceSpecialSymbols(query.value)}&in=${ein.value}&ot=0`
-    // router.push(`/get?st=${query.value}&in=w`)
+    router.push({ name: 'get', query: { st: replaceSpecialSymbols(query.value), in: ein.value, ot: '0' } });
 }
 
 const props = defineProps(['st', 'in'])

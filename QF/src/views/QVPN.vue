@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { decodeUTF8 } from '@/common/main';
 import NoFound from '@/components/Base/NoFound.vue';
+import { useRouter } from 'vue-router';
 
 
 const props = defineProps(['url'])
@@ -15,12 +16,14 @@ const raw_page = await axios.post(VPN_ENDPOINT, {
 })
 
 const page = raw_page?.data?.html
+const router = useRouter();
 
 const url = ref(props.url)
 
 
 function changePath() {
-    location.href = `/qvpn?url=${url.value}`
+    router.push({ name: 'qvpn', query: { url: url.value } });
+
 }
 </script>
 

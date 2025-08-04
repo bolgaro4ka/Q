@@ -27,7 +27,7 @@ ALLOWED_HOSTS = ['q.paia1nik.ru', 'https://q.blgr.space', 'localhost', '*']
 CSRF_TRUSTED_ORIGINS=['https://q.blgr.space', 'http://192.168.0.228:4002','http://localhost:3003']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Application definition
 

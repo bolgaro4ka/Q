@@ -5,7 +5,6 @@ import axios from 'axios';
 import { computed, ref, watch, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { onBeforeRouteUpdate } from 'vue-router';
-import iconv from 'iconv-lite';
 import QPages from '@/components/QPages.vue';
 import { replaceSpecialSymbols} from '@/common/main';
 import NoFound from '@/components/Base/NoFound.vue';

@@ -13,6 +13,7 @@ export default defineConfig({
   server: {
     port: 4002, // change to your desired port
     host: '0.0.0.0',
+    allowedHosts: ['q.blgr.space']
   },
   resolve: {
     alias: {

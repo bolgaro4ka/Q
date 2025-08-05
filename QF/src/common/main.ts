@@ -77,5 +77,5 @@ export function decodeUTF8(s: string) {
 }
 
 export function recoveryBG() {
-    document.body.style.background = localStorage.getItem('color2') || '#232222';
+    document.body.style.background = '#181818'; //localStorage.getItem('color2') || 
 }

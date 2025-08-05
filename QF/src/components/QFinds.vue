@@ -13,7 +13,9 @@ import { lang, LC_ARCHIVE_LINK, LC_SAVED, LC_SEARCH_FIELS_SAME_SIZE, LC_SEARCH_O
 import { LC_JANUARY, LC_FEBRUARY, LC_MARCH, LC_APRIL, LC_MAY, LC_JUNE, LC_JULY, LC_AUGUST, LC_SEPTEMBER, LC_OCTOBER, LC_NOVEMBER, LC_DECEMBER } from '@/locale/dict';
 
 
+
 const route = useRoute();
+const query = ref(replaceSpecialSymbols(route.query.st as string))
 
 const router = useRouter();
 function localizeSaved(saved: string): string {
@@ -49,42 +51,72 @@ function localizeSaved(saved: string): string {
 }
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 
+// FIRST LOAD
 const g_find = ref(true)
 const d_find = ref(true)
 
-const raw_res = await axios.post(REQ_ENDPOINT, {
-  st: replaceSpecialSymbols(route.query.st as string),
-  in: route.query.in as string,
-  ot: route.query.ot as string,
-  sz: route.query?.sz as string | undefined,
-  sg: route.query?.sg as string | undefined
-})
 
-if (raw_res.data.obj?.length != 0) d_find.value = true
+const raw_res = ref<any>(await axios.post(REQ_ENDPOINT, {
+    st: replaceSpecialSymbols(route.query.st as string),
+    in: route.query.in as string,
+    ot: route.query.ot as string,
+    sz: route.query?.sz as string | undefined,
+    sg: route.query?.sg as string | undefined
+  }))
+
+const results = ref<any[]>([])
+const res_google = ref<any>(null)
+
+results.value = raw_res.value.data.obj
+if (raw_res.value.data.obj?.length != 0) d_find.value = true
 else d_find.value = false
+res_google.value = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).catch(e => { g_find.value = false; return null })
 
-const res_google = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).catch(e => g_find.value = false)
+// SECOND LOAD
+async function fetchResults() {
+  d_find.value = true
+  g_find.value = true
+  raw_res.value = await axios.post(REQ_ENDPOINT, {
+    st: replaceSpecialSymbols(route.query.st as string),
+    in: route.query.in as string,
+    ot: route.query.ot as string,
+    sz: route.query?.sz as string | undefined,
+    sg: route.query?.sg as string | undefined
+  })
 
-const results = raw_res.data.obj
+  query.value = replaceSpecialSymbols(route.query.st as string)
+  
+  results.value = raw_res.value.data.obj
+  if (raw_res.value.data.obj?.length != 0) d_find.value = true
+  else d_find.value = false
+
+  res_google.value = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).catch(e => { g_find.value = false; return null })
+}
+
+import { watch, onMounted } from 'vue'
+onMounted(fetchResults)
+watch(
+  () => [route.query.st, route.query.in, route.query.ot, route.query.sz, route.query.sg],
+  fetchResults,
+  { deep: false }
+)
 
 function getHostname(url : string) {
   return new URL(url).hostname
 }
 
 
-const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) ? Number(localStorage.getItem('qgpt') ) : 1)
-
-
+const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != undefined ? Number(localStorage.getItem('qgpt') ) : 1)
 
 
 </script>
 
 
 <template>
-  <div v-if="raw_res.data.OK">
+  <div v-if="true">
     <QSearcherMini :st="st" :in="in" v-if="d_find || g_find"/>
     <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages" v-if="d_find || g_find" />
-    <Suspense><QGPT :content="props.st" v-if="props.in == 'w' && qgpt != 0" :mode="qgpt"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
+    <Suspense><QGPT :content="query" v-if="route.query.in == 'w' && qgpt != 0" :mode="qgpt"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
     
     <div class="finds__wrapper">
       <div class="finds__content">

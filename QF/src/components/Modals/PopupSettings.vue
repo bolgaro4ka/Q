@@ -6,7 +6,7 @@ import { ref, type Ref } from 'vue';
 
 
 const url : Ref<string | null> = ref(localStorage.getItem('url') == undefined ? 'https://scientificrussia.ru/images/i/31qi-full.jpg' : localStorage.getItem('url'))
-const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) ? Number(localStorage.getItem('qgpt')) : 1)
+const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != undefined ? Number(localStorage.getItem('qgpt')) : 1)
 
 const openai_key : Ref<string | null> = ref(localStorage.getItem('openai_key') ? localStorage.getItem('openai_key') : '')
 

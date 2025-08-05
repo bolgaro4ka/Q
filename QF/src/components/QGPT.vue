@@ -2,7 +2,9 @@
 import { GPT_ENDPOINT } from '@/config/main';
 import { lang, LC_QGPT_NOT_ANSWER, LC_VHTML_ANSWER_OF_QGPT } from '@/locale/dict';
 import axios from 'axios';
+
 import { marked } from 'marked';
+import { ref, watch } from 'vue';
 
 const props = defineProps(['content', 'mode'])
 
@@ -11,7 +13,18 @@ const raw_res = await axios.post(GPT_ENDPOINT, {
     chatgpt_api_key: props.mode == 2 ? localStorage.getItem('openai_key') : ''
 })
 
-const res = marked(raw_res.data.res)
+const res = ref(marked(raw_res.data.res))
+
+watch(
+    () => props.content,
+    async () => {
+        const raw_res = await axios.post(GPT_ENDPOINT, {
+            content: props.content,
+            chatgpt_api_key: props.mode == 2 ? localStorage.getItem('openai_key') : ''
+        })
+        res.value = marked(raw_res.data.res)
+    }
+)
 </script>
 
 

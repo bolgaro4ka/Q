@@ -75,3 +75,7 @@ export function escape(s: string) {
 export function decodeUTF8(s: string) {
     return decodeURIComponent(escape(s))
 }
+
+export function recoveryBG() {
+    document.body.style.background = localStorage.getItem('color2');
+}

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import QFinds from '@/components/QFinds.vue';
 import Loader from '@/components/Base/Loader.vue';
+import { recoveryBG } from '@/common/main';
 
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
+
+recoveryBG();
 </script>
 
 <template>

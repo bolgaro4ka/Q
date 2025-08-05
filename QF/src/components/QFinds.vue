@@ -2,17 +2,20 @@
 import QSearcherMini from '@/components/QSearcherMini.vue';
 import { REQ_ENDPOINT } from '@/config/main';
 import axios from 'axios';
-import { computed, ref, watch, type Ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { onBeforeRouteUpdate } from 'vue-router';
+import { ref, type Ref } from 'vue';
 import QPages from '@/components/QPages.vue';
 import { replaceSpecialSymbols} from '@/common/main';
 import NoFound from '@/components/Base/NoFound.vue';
 import QGPT from './QGPT.vue';
 import Loader from './Base/Loader.vue';
+import { useRoute, useRouter } from 'vue-router';
 import { lang, LC_ARCHIVE_LINK, LC_SAVED, LC_SEARCH_FIELS_SAME_SIZE, LC_SEARCH_ONLY_ON_THIS_SERVER, LC_SIMULAR_FIELS, LC_SITE_MAYBE_BLOCK_RKN } from '@/locale/dict';
 import { LC_JANUARY, LC_FEBRUARY, LC_MARCH, LC_APRIL, LC_MAY, LC_JUNE, LC_JULY, LC_AUGUST, LC_SEPTEMBER, LC_OCTOBER, LC_NOVEMBER, LC_DECEMBER } from '@/locale/dict';
 
+
+const route = useRoute();
+
+const router = useRouter();
 function localizeSaved(saved: string): string {
   console.log(saved)
   let s = saved
@@ -44,24 +47,23 @@ function localizeSaved(saved: string): string {
     .replace('декабря', LC_DECEMBER[lang]);
   return s;
 }
-const route = useRoute()
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 
 const g_find = ref(true)
 const d_find = ref(true)
 
 const raw_res = await axios.post(REQ_ENDPOINT, {
-  st: replaceSpecialSymbols(props.st),
-  in: props.in,
-  ot: props.ot,
-  sz: props?.sz,
-  sg: props?.sg
+  st: replaceSpecialSymbols(route.query.st),
+  in: route.query.in,
+  ot: route.query.ot,
+  sz: route.query?.sz,
+  sg: route.query?.sg
 })
 
 if (raw_res.data.obj?.length != 0) d_find.value = true
 else d_find.value = false
 
-const res_google = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(props.st)}&start=${parseInt(props.ot)/10}&lr=ru-RU`).catch(e => g_find.value = false)
+const res_google = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st)}&start=${parseInt(route.query.ot)/10}&lr=ru-RU`).catch(e => g_find.value = false)
 
 const results = raw_res.data.obj
 

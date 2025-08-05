@@ -53,17 +53,17 @@ const g_find = ref(true)
 const d_find = ref(true)
 
 const raw_res = await axios.post(REQ_ENDPOINT, {
-  st: replaceSpecialSymbols(route.query.st),
-  in: route.query.in,
-  ot: route.query.ot,
-  sz: route.query?.sz,
-  sg: route.query?.sg
+  st: replaceSpecialSymbols(route.query.st as string),
+  in: route.query.in as string,
+  ot: route.query.ot as string,
+  sz: route.query?.sz as string | undefined,
+  sg: route.query?.sg as string | undefined
 })
 
 if (raw_res.data.obj?.length != 0) d_find.value = true
 else d_find.value = false
 
-const res_google = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st)}&start=${parseInt(route.query.ot)/10}&lr=ru-RU`).catch(e => g_find.value = false)
+const res_google = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).catch(e => g_find.value = false)
 
 const results = raw_res.data.obj
 

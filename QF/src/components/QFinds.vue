@@ -15,13 +15,15 @@ import { watch, onMounted } from 'vue'
 
 
 const route = useRoute();
-const query = ref(replaceSpecialSymbols(route.query.st as string))
+const query = ref(route.query.st ? replaceSpecialSymbols(route.query.st as string) : '')
 
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 
 // FIRST LOAD
 const g_find = ref(true)
 const d_find = ref(true)
+
+const isLoading = ref(true);
 
 const results = ref<any[]>([])
 const res_google = ref<any>(null)
@@ -51,36 +53,31 @@ function localizeSaved(saved: string): string {
   return s;
 }
 
-const raw_res = ref<any>(await axios.post(REQ_ENDPOINT, {
-    st: replaceSpecialSymbols(route.query.st as string),
-    in: route.query.in as string,
-    ot: route.query.ot as string,
-    sz: route.query?.sz as string | undefined,
-    sg: route.query?.sg as string | undefined
-  }))
+const raw_res = ref<any>()
 
 
 
 
 // SECOND LOAD
 async function fetchResults() {
+  isLoading.value = true
   d_find.value = true
   g_find.value = true
   raw_res.value = await axios.post(REQ_ENDPOINT, {
-    st: replaceSpecialSymbols(route.query.st as string),
+    st: route.query.st ? replaceSpecialSymbols(route.query.st as string) : '',
     in: route.query.in as string,
     ot: route.query.ot as string,
     sz: route.query?.sz as string | undefined,
     sg: route.query?.sg as string | undefined
   })
 
-  query.value = replaceSpecialSymbols(route.query.st as string)
+  query.value = route.query.st ? replaceSpecialSymbols(route.query.st as string) : '',
   
   results.value = raw_res.value.data.obj
-  if (raw_res.value.data.obj?.length != 0) d_find.value = true
-  else d_find.value = false
+  raw_res.value.data.obj?.length != 0 ? d_find.value = true : d_find.value = false
 
-  res_google.value = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).catch(e => { g_find.value = false; return null })
+  if (props.in == 'w') res_google.value = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).then(r => { g_find.value = true; return r}).catch(e => { g_find.value = false; return null })
+  isLoading.value = false
 }
 
 
@@ -96,26 +93,20 @@ const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != un
 
 
 <template>
-  <div v-if="true">
+  <div v-if="raw_res?.data?.OK">
     <QSearcherMini :st="st" :in="in" v-if="d_find || g_find"/>
-    <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages" v-if="d_find || g_find" />
-    <Suspense><QGPT :content="query" v-if="route.query.in == 'w' && qgpt != 0" :mode="qgpt"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
+    <template v-if="d_find || g_find"><QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages"  /></template>
+    <Suspense><QGPT :content="query" v-if="route.query.in == 'w' && qgpt != 0 && d_find && g_find" :mode="qgpt"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
     
     <div class="finds__wrapper">
       <div class="finds__content">
-
       <div class="finds">
-
         <div class="find google" v-if="(res_google as any)?.data?.items && props.in == 'w'" v-for="result in (res_google as any).data.items" :key="result" >
           <a :href="result.link" target="_blank"><p v-html="result.htmlTitle" class="find_url"></p></a>
           <div v-html="getHostname(result.link)" class="find_link"></div>
-          
           <p v-html="result.htmlSnippet"  class="find_desc"></p>
-
         </div>
-
-
-      <div v-for="result in results" :key="result" :class="`find ${props.in}_cls ${result.class}`">
+      <div v-for="result in results" :key="result" :class="`find ${props.in}_cls ${result.class}`" v-if="results">
         <template v-if="result">
           <div v-html="result.link" class="find_link"></div>
           <p v-html="result.url" class="find_url"></p>
@@ -123,12 +114,15 @@ const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != un
           <p v-html="result.desc"  class="find_desc"></p>
           <p v-html="result.arch?.replace('Архивная ссылка (web.archive.org)', LC_ARCHIVE_LINK[lang])" class="find_arch"></p>
           <p class="rkn__block" v-if="result.class == 'rkn'">{{ LC_SITE_MAYBE_BLOCK_RKN[lang] }}</p>
-          <div v-if="props.in == 'f'" class="find__links"><a :href="result.simular_url+'&ot=0'">{{ LC_SIMULAR_FIELS[lang] }}</a><a :href="result.also_url+'&ot=0'">{{ LC_SEARCH_FIELS_SAME_SIZE[lang] }}</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">{{ LC_SEARCH_ONLY_ON_THIS_SERVER[lang] }}</a></div>
+          <div v-if="props.in == 'f'" class="find__links">
+            <RouterLink :to="result.simular_url+'&ot=0'">{{ LC_SIMULAR_FIELS[lang] }}</RouterLink>
+            <RouterLink :to="result.also_url+'&ot=0'">{{ LC_SEARCH_FIELS_SAME_SIZE[lang] }}</RouterLink>
+            <RouterLink :to="result.search_url+'&ot=0'" v-if="result.search_url">{{ LC_SEARCH_ONLY_ON_THIS_SERVER[lang] }}</RouterLink>
+          </div>
           <div class="find__saveWrapper" v-if="props.in == 'w'">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
             <p v-html="localizeSaved(result.saved)" class="find_saved"></p>
           </div>
-
         </template>
       </div>
       </div>
@@ -136,13 +130,17 @@ const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != un
     </div>
     <QPages :ot="$props.ot" :st="st" :in="in" :cpages="raw_res.data.cpages"  v-if="d_find || g_find" :bottom="true" style="margin-top: 20px;"/>
   </div>
+  <div v-else-if="isLoading" style="width: 100vw; height: 100dvh;">
+    <Loader/>
+  </div>
   <div v-else>
     <QSearcherMini :st="st" :in="in"/>
     <Suspense><QGPT :content="props.st" v-if="props.in == 'w'"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
-    <NoFound :err="raw_res.data.error"/>
+    <NoFound :err="raw_res?.data?.error"/>
   </div>
   <div v-if="!d_find && !g_find">
     <QSearcherMini :st="st" :in="in"/>
+    <Suspense><QGPT :content="props.st" v-if="props.in == 'w'"/><template #fallback><Loader style="width: 100%; height: 100%;"/></template></Suspense>
     <NoFound :err="'not found or big number of pages'"/>
   </div>
 </template>

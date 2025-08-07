@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, type Ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, type Router } from 'vue-router';
 
 import { replaceSpecialSymbols } from '@/common/main';
 import Modal from './Base/Modal.vue';
@@ -10,47 +10,65 @@ import Loader from './Base/Loader.vue';
 import AddTab from './Modals/AddTab.vue';
 import { lang, LC_ADD_TAB, LC_LIST_OF_FTP_SERVERS, LC_QVPN, LC_SEARCH_IN_FIELS, LC_SEARCH_IN_INTERNET, LC_SETTINGS_Q, LC_VHTML_ABOUT } from '@/locale/dict';
 
-const query = ref('')
-const mode : Ref<string> = ref('')
-const router = useRouter()
+// Router hook
+const router : Router = useRouter()
 
-onMounted(() => {
-    mode.value = 'w'
-})
+// Searcher param
+const query : Ref<string> = ref('')
+const mode : Ref<string> = ref('w')
 
-const isSettingsPopupOpen = ref(false)
-const isFTPPopupOpen = ref(false)
-const isAddTabOpen = ref(false)
+// Tabs
+// Example: [{"title": "Me", "url": "https://blgr.space"}]
+const tabs : Ref<Array<{title: string, url: string}>> = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem('tabs') as string) : []) 
+
+// Window activators
+const isSettingsPopupOpen : Ref<boolean> = ref(false)
+const isFTPPopupOpen : Ref<boolean> = ref(false)
+const isAddTabOpen : Ref<boolean> = ref(false)
 
 
-function handleClick(e : Event) {
+/**
+ * Handles a click event by navigating to the search results page or VPN page based on the current mode.
+ *
+ * @param {Event} e - The click event.
+ * @return {void}
+ */
+function handleClick(e : Event) : void {
     if (mode.value != 'q') router.push({ name: 'get', query: { st: replaceSpecialSymbols(query.value), in: mode.value, ot: '0' } });
     if (mode.value == 'q') router.push({ name: 'qvpn', query: { url: query.value } });
-    // router.push(`/get?st=${query.value}&in=w`)
 }
 
-function handleAddTab(e : Event) {
-    isAddTabOpen.value = true
+
+/**
+ * Opens the add tab modal.
+ *
+ * @param {Event} e - The event that triggered the opening of the modal.
+ * @return {void}
+ */
+function handleAddTab(e : Event) : void { 
+    isAddTabOpen.value = true 
 }
 
-function handleDeleteTab(e : Event) {
+/**
+ * Deletes a tab from the list of tabs.
+ *
+ * @param {Event} e - The event that triggered the deletion.
+ * @return {void}
+ */
+function handleDeleteTab(e : Event) : void {
     const Ltabs = JSON.parse(localStorage.getItem('tabs') || '[]') as Array<{title: string, url: string}>;
     Ltabs.splice(Number((e.target as HTMLButtonElement).dataset.index), 1)
     localStorage.setItem('tabs', JSON.stringify(Ltabs));
-
     tabs.value = Ltabs
 }
 
+// If on page press enter -> request
 window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter') handleClick(e);} )
 
+// Wallaper for main search component
 onMounted(() => {
     document.body.style.backgroundImage = `url(${localStorage.getItem('url') || 'https://scientificrussia.ru/images/i/31qi-full.jpg'})`;
 })
-
-
-const tabs = ref(localStorage.getItem('tabs') ? JSON.parse(localStorage.getItem('tabs') as string) : []) // [{"title": "title", "url": "url"}]
-
-
 
 </script>
 

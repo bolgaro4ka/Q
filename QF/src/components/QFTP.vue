@@ -1,14 +1,9 @@
 <script setup lang="ts">
-
-import { BASE_URL, FTP_ENDPOINT } from '@/config/main';
+import { FTP_ENDPOINT } from '@/config/main';
 import axios from 'axios';
 
-const raw_res = await axios.get(FTP_ENDPOINT)
-
-const res = raw_res.data.slice(7,-1)
-
-
-
+// Get list of FTP Servers
+const res = await axios.get(FTP_ENDPOINT).then(raw_res => raw_res.data.slice(7,-1)).catch(e => [])
 </script>
 
 <template>

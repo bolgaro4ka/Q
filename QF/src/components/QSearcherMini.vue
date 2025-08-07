@@ -3,23 +3,32 @@ import { ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { replaceSpecialSymbols } from '@/common/main';
-import { lang as langRaw, LC_SEARCH_IN_FIELS, LC_SEARCH_IN_INTERNET } from '@/locale/dict';
+import { lang, LC_SEARCH_IN_FIELS, LC_SEARCH_IN_INTERNET } from '@/locale/dict';
+
+// Router hook
 const router = useRouter();
 
-type LangKey = keyof typeof LC_SEARCH_IN_FIELS;
-const lang = langRaw as LangKey;
+// Props
+const props = defineProps(['st', 'in'])
 
-const query = ref('')
-const ein : Ref<string> = ref('')
+// Searcher param
+const query : Ref<string> = ref(props.st)
+const ein : Ref<string> = ref(props.in) // mode value
 
-function handleClick(e : Event, mode?: string) {
+
+/**
+ * Handles a click event by updating the search mode and navigating to the search results page.
+ *
+ * @param {Event} e - The click event.
+ * @param {string} [mode] - The optional search mode.
+ * @return {void}
+ */
+function handleClick(e : Event, mode?: string) : void {
     if (mode) ein.value = mode
     router.push({ name: 'get', query: { st: replaceSpecialSymbols(query.value), in: ein.value, ot: '0' } });
 }
 
-const props = defineProps(['st', 'in'])
-
-if (props.st) query.value = props.st; ein.value = props.in
+// If on page press enter -> request
 window.addEventListener('keypress', (e : KeyboardEvent) => {if (e.key == 'Enter') handleClick(e);} )
 
 

@@ -155,7 +155,7 @@ class StatusView(generics.GenericAPIView):
                 font_tag['color'] = '#fff'
 
             for tr_tag in soup_mamont.find_all('tr'):
-                tr_tag['bgcolor'] = 'var(--color-secondary)'
+                tr_tag['bgcolor'] = 'var(--color-table)'
 
             for p_cache in soup_mamont.find_all('p', class_='cache_p'):
                 p_cache.a['href'] = 'https://www.mmnt.ru' + p_cache.a['href']

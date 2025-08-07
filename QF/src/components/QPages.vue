@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toNormalNumber, urlEncode, roundIfNumberHaveDotWithNumberAfterItMoreThanZero } from '@/common/main';
+import { toNormalNumber, roundIfNumberHaveDotWithNumberAfterItMoreThanZero } from '@/common/main';
 import { lang, LC_1_000, LC_1_000_000, LC_1_000_000_000, LC_NEXT_PAGE, LC_NUMBER_OF_PAGES, LC_NUMBER_OF_RESULTS, LC_PREVIOUS_PAGE } from '@/locale/dict';
 
 const props = defineProps(['ot', 'st', 'in', 'cpages', 'bottom'])
@@ -16,7 +16,6 @@ const props = defineProps(['ot', 'st', 'in', 'cpages', 'bottom'])
             :href="`/get?in=${$props.in}&st=${$props.st}&ot=${(parseInt($props.ot) + parseInt(count)*10)}`">
         {{ count }}
         </a>
-        
     </div>
         <div class="pages__nexts">
             <a 

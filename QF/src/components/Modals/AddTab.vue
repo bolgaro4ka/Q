@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { reload } from '@/common/route';
 import { lang, LC_ADD, LC_MAX_TABS_ERROR, LC_NEW_TAB, LC_TITLE, LC_URL_NOT_SPECIFIED_ERROR } from '@/locale/dict';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 
 const title = ref('')
@@ -17,7 +21,7 @@ function handleAddTab(e : Event) {
     localStorage.setItem('tabs', JSON.stringify(tabs));
 
 
-    window.location.reload();
+    reload(router);
 }
 
 </script>

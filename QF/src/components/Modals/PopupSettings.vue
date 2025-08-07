@@ -1,53 +1,52 @@
 <script setup lang="ts">
 import { exportConfig, importConfig } from '@/common/configs';
+import { reload } from '@/common/route';
 import { applySettings } from '@/common/theme';
 import { lang, LC_API_KEY_OPENAI, LC_APPLY, LC_BASE_COLOR, LC_CUSTOMIZATION, LC_DONT_USE_AI, LC_EXPORT, LC_IMPORT, LC_IMPORT_EXPORT, LC_IMPORT_EXPORT_RECOMENDATION, LC_LANGUAGE, LC_QGPT_SETTINGS, LC_RESET_SETTINGS, LC_RESETED, LC_SAVE_AND_APPLY, LC_SAVED, LC_SECONDARY_COLOR, LC_USE_CHATGPT, LC_USE_QGPT, LC_WALLAPER } from '@/locale/dict';
 import { ref, type Ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+// Elements
+// Save btn
+const button : Ref<HTMLButtonElement | null> = ref(null)
+// Recovery btn
+const Rbutton : Ref<HTMLButtonElement | null> = ref(null)
 
 
+// Base Settings
 const url : Ref<string | null> = ref(localStorage.getItem('url') == undefined ? 'https://scientificrussia.ru/images/i/31qi-full.jpg' : localStorage.getItem('url'))
 const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != undefined ? Number(localStorage.getItem('qgpt')) : 1)
-
 const openai_key : Ref<string | null> = ref(localStorage.getItem('openai_key') ? localStorage.getItem('openai_key') : '')
-
 const color1 : Ref<string | null> = ref(localStorage.getItem('color1') ? localStorage.getItem('color1') : '#800080')
 const color2 : Ref<string | null> = ref(localStorage.getItem('color2') ? localStorage.getItem('color2') : '#232222')
 
+// Language settings
 const Llang : Ref<string | null> = ref(lang)
 
-const button : Ref<HTMLButtonElement | null> = ref(null)
-const Rbutton : Ref<HTMLButtonElement | null> = ref(null)
-
+// Raw Config
 const config : Ref<string | null> = ref('')
+
+// Windows activators
 const isShowImportActions : Ref<boolean> = ref(false)
 
+// Events
 const emits = defineEmits(['close'])
 
 applySettings();
 
 function saveSettings(e : MouseEvent) {
     localStorage.setItem('url', url.value as string)
-
     localStorage.setItem('color1', color1.value as string)
     localStorage.setItem('color2', color2.value as string)
-
     localStorage.setItem('openai_key', openai_key.value as string)
-    console.log(Llang.value)
     localStorage.setItem('lang', Llang.value as string)
-
-    
-
     localStorage.setItem('qgpt', String(qgpt.value));
-
-    console.log(qgpt.value, Number(localStorage.getItem('qgpt')))
 
     applySettings();
     (button.value as HTMLButtonElement).innerText = LC_SAVED[lang]
-    location.reload();
-    emits('close');
-
-    
-    
+    reload(router);
 }
 
 function handleExport(e : MouseEvent) {
@@ -55,23 +54,18 @@ function handleExport(e : MouseEvent) {
 }
 
 function handleImport(e : MouseEvent) {
-    
     importConfig(config.value as string);
-    
 }
-
-
-
 
 function resetSettings(e : MouseEvent) {
     // remove all items from localStorage
     localStorage.clear();
 
+    // standart wallaper
     localStorage.setItem('url', 'https://scientificrussia.ru/images/i/31qi-full.jpg');
 
     (Rbutton.value as HTMLButtonElement).innerText = LC_RESETED[lang];
-    location.reload();
-    emits('close');
+    reload(router);
 }
 
 

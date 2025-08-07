@@ -20,7 +20,9 @@ export const NORMALIZE_NUMBERS : { [key: string]: number } = {
 
 }
 
-
+export function getHostname(url : string) {
+  return new URL(url).hostname
+}
 
 export function urlEncode(s: string) {
     let res=''
@@ -78,4 +80,8 @@ export function decodeUTF8(s: string) {
 
 export function recoveryBG() {
     document.body.style.background = '#181818'; //localStorage.getItem('color2') || 
+}
+
+export function replaceAll(str: string, find: string, replace: string) {
+    return str.replace(new RegExp(find, 'g'), replace);
 }

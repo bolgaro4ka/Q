@@ -308,6 +308,21 @@ export const LC_DECEMBER : { [key: string]: string } = {
     'hi': 'दि.',
 }
 
+export const LC_MONTH_TRANSLATIONS  = [
+    LC_JANUARY,
+    LC_FEBRUARY,
+    LC_MARCH,
+    LC_APRIL,
+    LC_MAY,
+    LC_JUNE,
+    LC_JULY,
+    LC_AUGUST,
+    LC_SEPTEMBER,
+    LC_OCTOBER,
+    LC_NOVEMBER,
+    LC_DECEMBER
+]
+
 
 // ОСТАЛЬНОЕ
 

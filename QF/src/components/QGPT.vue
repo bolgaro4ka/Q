@@ -8,13 +8,16 @@ import { ref, watch } from 'vue';
 
 const props = defineProps(['content', 'mode'])
 
+// Request to QGPT (mode = 1) or ChatGPT (mode = 2)
 const raw_res = await axios.post(GPT_ENDPOINT, {
     content: props.content,
     chatgpt_api_key: props.mode == 2 ? localStorage.getItem('openai_key') : ''
 })
 
+// Response from QGPT or ChatGPT
 const res = ref(marked(raw_res.data.res))
 
+// Watch for changes props.content
 watch(
     () => props.content,
     async () => {
@@ -30,7 +33,6 @@ watch(
 
 <template>
  <div class="qgpt-container">
-    
     <div class="qgpt">
         <h3 v-html="LC_VHTML_ANSWER_OF_QGPT[lang]"></h3>
         <p v-html="res" v-if="res"></p>

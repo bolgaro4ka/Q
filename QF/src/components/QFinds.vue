@@ -4,57 +4,52 @@ import { REQ_ENDPOINT } from '@/config/main';
 import axios from 'axios';
 import { ref, type Ref } from 'vue';
 import QPages from '@/components/QPages.vue';
-import { replaceSpecialSymbols} from '@/common/main';
+import { getHostname, replaceAll, replaceSpecialSymbols} from '@/common/main';
 import NoFound from '@/components/Base/NoFound.vue';
 import QGPT from './QGPT.vue';
 import Loader from './Base/Loader.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { lang, LC_ARCHIVE_LINK, LC_SAVED, LC_SEARCH_FIELS_SAME_SIZE, LC_SEARCH_ONLY_ON_THIS_SERVER, LC_SIMULAR_FIELS, LC_SITE_MAYBE_BLOCK_RKN } from '@/locale/dict';
 import { LC_JANUARY, LC_FEBRUARY, LC_MARCH, LC_APRIL, LC_MAY, LC_JUNE, LC_JULY, LC_AUGUST, LC_SEPTEMBER, LC_OCTOBER, LC_NOVEMBER, LC_DECEMBER } from '@/locale/dict';
-
+import { watch, onMounted } from 'vue'
 
 
 const route = useRoute();
 const query = ref(replaceSpecialSymbols(route.query.st as string))
 
-const router = useRouter();
-function localizeSaved(saved: string): string {
-  console.log(saved)
-  let s = saved
-    .replace('Сохранено', LC_SAVED[lang].slice(0, LC_SAVED[lang].length-1))
-    .replace('января', LC_JANUARY[lang])
-    .replace('февраля', LC_FEBRUARY[lang])
-    .replace('марта', LC_MARCH[lang])
-    .replace('апреля', LC_APRIL[lang])
-    .replace('мая', LC_MAY[lang])
-    .replace('июня', LC_JUNE[lang])
-    .replace('июля', LC_JULY[lang])
-    .replace('августа', LC_AUGUST[lang])
-    .replace('сентября', LC_SEPTEMBER[lang])
-    .replace('октября', LC_OCTOBER[lang])
-    .replace('ноября', LC_NOVEMBER[lang])
-    .replace('декабря', LC_DECEMBER[lang])
-    .replace('Сохранено', LC_SAVED[lang].slice(0, LC_SAVED[lang].length-1))
-    .replace('января', LC_JANUARY[lang])
-    .replace('февраля', LC_FEBRUARY[lang])
-    .replace('марта', LC_MARCH[lang])
-    .replace('апреля', LC_APRIL[lang])
-    .replace('мая', LC_MAY[lang])
-    .replace('июня', LC_JUNE[lang])
-    .replace('июля', LC_JULY[lang])
-    .replace('августа', LC_AUGUST[lang])
-    .replace('сентября', LC_SEPTEMBER[lang])
-    .replace('октября', LC_OCTOBER[lang])
-    .replace('ноября', LC_NOVEMBER[lang])
-    .replace('декабря', LC_DECEMBER[lang]);
-  return s;
-}
 const props = defineProps(['st', 'in', 'ot', 'sz', 'sg'])
 
 // FIRST LOAD
 const g_find = ref(true)
 const d_find = ref(true)
 
+const results = ref<any[]>([])
+const res_google = ref<any>(null)
+
+/**
+ * Localizes a given saved string by replacing Russian month names with their corresponding translations.
+ *
+ * @param {string} saved - The saved string to be localized.
+ * @return {string} The localized saved string.
+ */
+function localizeSaved(saved: string): string {
+  let s = saved
+    .replace('Сохранено', LC_SAVED[lang].slice(0, LC_SAVED[lang].length-1))
+    s = replaceAll(s, 'января', LC_JANUARY[lang])
+    s = replaceAll(s, 'февраля', LC_FEBRUARY[lang])
+    s = replaceAll(s, 'марта', LC_MARCH[lang])
+    s = replaceAll(s, 'апреля', LC_APRIL[lang])
+    s = replaceAll(s, 'мая', LC_MAY[lang])
+    s = replaceAll(s, 'июня', LC_JUNE[lang])
+    s = replaceAll(s, 'июля', LC_JULY[lang])
+    s = replaceAll(s, 'августа', LC_AUGUST[lang])
+    s = replaceAll(s, 'сентября', LC_SEPTEMBER[lang])
+    s = replaceAll(s, 'октября', LC_OCTOBER[lang])
+    s = replaceAll(s, 'ноября', LC_NOVEMBER[lang])
+    s = replaceAll(s, 'декабря', LC_DECEMBER[lang])
+    
+  return s;
+}
 
 const raw_res = ref<any>(await axios.post(REQ_ENDPOINT, {
     st: replaceSpecialSymbols(route.query.st as string),
@@ -64,13 +59,8 @@ const raw_res = ref<any>(await axios.post(REQ_ENDPOINT, {
     sg: route.query?.sg as string | undefined
   }))
 
-const results = ref<any[]>([])
-const res_google = ref<any>(null)
 
-results.value = raw_res.value.data.obj
-if (raw_res.value.data.obj?.length != 0) d_find.value = true
-else d_find.value = false
-res_google.value = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).catch(e => { g_find.value = false; return null })
+
 
 // SECOND LOAD
 async function fetchResults() {
@@ -93,7 +83,7 @@ async function fetchResults() {
   res_google.value = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBTFt0SF5N-DPsRpxp8t2sur8rXmQ66sqg&cx=7369df37203b745bf&q=${replaceSpecialSymbols(route.query.st as string)}&start=${parseInt(route.query.ot as string)/10}&lr=ru-RU`).catch(e => { g_find.value = false; return null })
 }
 
-import { watch, onMounted } from 'vue'
+
 onMounted(fetchResults)
 watch(
   () => [route.query.st, route.query.in, route.query.ot, route.query.sz, route.query.sg],
@@ -101,14 +91,7 @@ watch(
   { deep: false }
 )
 
-function getHostname(url : string) {
-  return new URL(url).hostname
-}
-
-
 const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != undefined ? Number(localStorage.getItem('qgpt') ) : 1)
-
-
 </script>
 
 
@@ -138,7 +121,7 @@ const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != un
           <p v-html="result.url" class="find_url"></p>
           <div class="table" v-html="result.table"></div>
           <p v-html="result.desc"  class="find_desc"></p>
-          <p v-html="result.arch.replace('Архивная ссылка (web.archive.org)', LC_ARCHIVE_LINK[lang])" class="find_arch"></p>
+          <p v-html="result.arch?.replace('Архивная ссылка (web.archive.org)', LC_ARCHIVE_LINK[lang])" class="find_arch"></p>
           <p class="rkn__block" v-if="result.class == 'rkn'">{{ LC_SITE_MAYBE_BLOCK_RKN[lang] }}</p>
           <div v-if="props.in == 'f'" class="find__links"><a :href="result.simular_url+'&ot=0'">{{ LC_SIMULAR_FIELS[lang] }}</a><a :href="result.also_url+'&ot=0'">{{ LC_SEARCH_FIELS_SAME_SIZE[lang] }}</a><a :href="result.search_url+'&ot=0'" v-if="result.search_url">{{ LC_SEARCH_ONLY_ON_THIS_SERVER[lang] }}</a></div>
           <div class="find__saveWrapper" v-if="props.in == 'w'">
@@ -185,6 +168,10 @@ const qgpt : Ref<number | null> = ref(Number(localStorage.getItem('qgpt')) != un
 
 .f_cls .find_link *:visited {
   color: #c58af9;
+}
+
+table {
+  background-color: #99c3ff;
 }
 
 @media screen and (max-width: 739px) {

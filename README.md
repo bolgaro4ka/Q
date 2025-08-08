@@ -4,6 +4,8 @@ Q - поисковик по всему интернету
  <img src="https://github.com/user-attachments/assets/6e17156d-fd27-4e3b-a4d3-214d530dea91" alt="logo" />
 </div>
 
+### [🧩 Подробная документация](https://q.blgr.space/api)
+
 ## Содержание
  - [❓ Что это](#что-это)
  - [🌍 Где это](#где-это)
